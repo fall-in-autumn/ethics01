@@ -433,10 +433,11 @@
               1지망
             </label>
 
-            <select id="role1" class="w-full bg-indigo-50 rounded-2xl px-5 py-4 font-bold border-2 border-indigo-100">
-              <option>찬성</option>
-              <option>반대</option>
-              <option>판정단</option>
+            <select id="role1" onchange="updateRoleOptions()" class="w-full bg-indigo-50 rounded-2xl px-5 py-4 font-bold border-2 border-indigo-100">
+              <option value="">선택</option>
+              <option value="찬성">찬성</option>
+              <option value="반대">반대</option>
+              <option value="판정단">판정단</option>
             </select>
           </div>
 
@@ -445,10 +446,11 @@
               2지망
             </label>
 
-            <select id="role2" class="w-full bg-slate-50 rounded-2xl px-5 py-4 font-bold border-2 border-slate-100">
-              <option>반대</option>
-              <option>찬성</option>
-              <option>판정단</option>
+            <select id="role2" onchange="updateRoleOptions()" class="w-full bg-slate-50 rounded-2xl px-5 py-4 font-bold border-2 border-slate-100">
+              <option value="">선택</option>
+              <option value="찬성">찬성</option>
+              <option value="반대">반대</option>
+              <option value="판정단">판정단</option>
             </select>
           </div>
 
@@ -457,10 +459,11 @@
               3지망
             </label>
 
-            <select id="role3" class="w-full bg-slate-50 rounded-2xl px-5 py-4 font-bold border-2 border-slate-100">
-              <option>판정단</option>
-              <option>찬성</option>
-              <option>반대</option>
+            <select id="role3" onchange="updateRoleOptions()" class="w-full bg-slate-50 rounded-2xl px-5 py-4 font-bold border-2 border-slate-100">
+              <option value="">선택</option>
+              <option value="찬성">찬성</option>
+              <option value="반대">반대</option>
+              <option value="판정단">판정단</option>
             </select>
           </div>
 
@@ -999,6 +1002,48 @@
     });
 
     /* ------------------------------
+      ROLE DUPLICATE PREVENT
+    ------------------------------ */
+
+    function updateRoleOptions(){
+
+        const selects = [
+          document.getElementById("role1"),
+          document.getElementById("role2"),
+          document.getElementById("role3")
+        ];
+
+        const selectedValues = selects
+          .map(select => select.value)
+          .filter(value => value !== "");
+
+        selects.forEach(currentSelect => {
+
+          const currentValue = currentSelect.value;
+
+          Array.from(currentSelect.options).forEach(option => {
+
+            if(option.value === ""){
+              option.disabled = false;
+              return;
+            }
+
+            if(
+              selectedValues.includes(option.value)
+              && option.value !== currentValue
+            ){
+              option.disabled = true;
+            }else{
+              option.disabled = false;
+            }
+
+          });
+
+        });
+
+      }
+
+    /* ------------------------------
       APPLY
     ------------------------------ */
 
@@ -1214,6 +1259,7 @@
     ------------------------------ */
 
     renderTopics();
+    updateRoleOptions();
 
   </script>
 
