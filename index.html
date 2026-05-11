@@ -1,512 +1,1219 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>의리T와 함께하는 도덕 토론 발전소</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
-        
-        :root {
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --accent: #10b981;
-            --bg: #f8fafc;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>의리T와 함께하는 도덕 토론 발전소</title>
 
-        body { 
-            font-family: 'Pretendard', sans-serif; 
-            -webkit-tap-highlight-color: transparent;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            min-height: 100vh;
-        }
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+  <!-- Font Awesome -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    rel="stylesheet"
+  />
 
-        .hover-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .hover-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
+  <!-- Pretendard -->
+  <link
+    rel="stylesheet"
+    as="style"
+    crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+  />
 
-        .glass {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+  <style>
+    :root{
+      --primary:#6366f1;
+      --secondary:#8b5cf6;
+      --bg:#f8fafc;
+    }
 
-        .perspective { perspective: 1200px; }
-        .flip-card-inner {
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-        }
-        .flip-card-inner.flipped { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back {
-            backface-visibility: hidden;
-            border-radius: 1.5rem;
-        }
-        .flip-card-back { transform: rotateY(180deg); }
+    *{
+      box-sizing:border-box;
+    }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    </style>
+    body{
+      font-family:'Pretendard',sans-serif;
+      background:
+        radial-gradient(circle at top left,#eef2ff 0%,transparent 30%),
+        radial-gradient(circle at bottom right,#ede9fe 0%,transparent 30%),
+        linear-gradient(135deg,#f8fafc 0%,#eef2ff 100%);
+      min-height:100vh;
+      color:#0f172a;
+      overflow-x:hidden;
+    }
+
+    .glass{
+      background:rgba(255,255,255,0.78);
+      backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,0.4);
+    }
+
+    .fade-up{
+      animation:fadeUp .7s ease forwards;
+      opacity:0;
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(15px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .card-hover{
+      transition:all .35s ease;
+    }
+
+    .card-hover:hover{
+      transform:translateY(-6px);
+      box-shadow:0 25px 40px rgba(99,102,241,.18);
+    }
+
+    .flip-wrap{
+      perspective:1200px;
+    }
+
+    .flip-inner{
+      position:relative;
+      width:100%;
+      height:100%;
+      transition:transform .8s cubic-bezier(.2,.8,.2,1);
+      transform-style:preserve-3d;
+    }
+
+    .flip-inner.active{
+      transform:rotateY(180deg);
+    }
+
+    .flip-front,
+    .flip-back{
+      position:absolute;
+      inset:0;
+      backface-visibility:hidden;
+      border-radius:2rem;
+    }
+
+    .flip-back{
+      transform:rotateY(180deg);
+    }
+
+    .topic-progress{
+      position:absolute;
+      inset:0;
+      width:0%;
+      transition:width .5s ease;
+    }
+
+    .seat-badge{
+      animation:pop .4s ease;
+    }
+
+    @keyframes pop{
+      from{
+        opacity:0;
+        transform:scale(.7);
+      }
+      to{
+        opacity:1;
+        transform:scale(1);
+      }
+    }
+
+    ::-webkit-scrollbar{
+      width:7px;
+    }
+
+    ::-webkit-scrollbar-thumb{
+      background:#cbd5e1;
+      border-radius:999px;
+    }
+  </style>
 </head>
-<body class="text-slate-900 pb-20">
 
-    <!-- Header -->
-    <header class="glass sticky top-0 z-50 border-b border-slate-200">
-        <div class="max-w-5xl mx-auto flex justify-between items-center p-4">
-            <div class="flex items-center gap-3">
-                <div class="bg-indigo-600 p-2.5 rounded-xl shadow-lg shadow-indigo-200 rotate-3 group-hover:rotate-0 transition-transform">
-                    <i class="fa-solid fa-bolt-lightning text-white text-xl"></i>
-                </div>
-                <h1 class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 tracking-tight">
-                    의리T와 함께하는 도덕 토론 발전소
-                </h1>
-            </div>
-            <button onclick="checkAdminAccess()" class="w-12 h-12 flex items-center justify-center hover:bg-indigo-50 rounded-full transition-colors text-slate-400 hover:text-indigo-600">
-                <i class="fa-solid fa-gear text-xl"></i>
+<body class="pb-24">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-50 glass border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-xl shadow-indigo-200 rotate-3">
+          <i class="fa-solid fa-bolt-lightning text-white text-2xl"></i>
+        </div>
+
+        <div>
+          <h1 class="text-2xl md:text-3xl font-black bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+            의리T와 함께하는 도덕 토론 발전소
+          </h1>
+
+          <p class="text-sm text-slate-500 font-semibold mt-1">
+            논리와 경청으로 성장하는 토론 교실
+          </p>
+        </div>
+      </div>
+
+      <button
+        id="adminBtn"
+        class="w-12 h-12 rounded-full hover:bg-indigo-50 transition flex items-center justify-center text-slate-500 hover:text-indigo-600"
+      >
+        <i class="fa-solid fa-gear text-xl"></i>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- ADMIN -->
+  <section
+    id="adminPanel"
+    class="hidden border-b border-indigo-100 bg-indigo-50 fade-up"
+  >
+    <div class="max-w-6xl mx-auto p-6 space-y-6">
+
+      <div class="flex items-center justify-between">
+        <h2 class="font-black text-2xl text-indigo-900 flex items-center gap-3">
+          <i class="fa-solid fa-user-shield"></i>
+          의리T 관리 모드
+        </h2>
+
+        <button
+          id="closeAdminBtn"
+          class="text-indigo-500 font-bold hover:text-indigo-700"
+        >
+          닫기
+        </button>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-6">
+
+        <!-- TOPIC -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-indigo-100">
+          <h3 class="font-black text-lg mb-5">
+            토론 주제 관리
+          </h3>
+
+          <div class="flex gap-3 mb-5">
+            <input
+              id="newTopicInput"
+              type="text"
+              placeholder="새로운 도덕 토론 주제를 입력하세요."
+              class="flex-1 rounded-2xl border border-slate-200 px-4 py-3 outline-none focus:ring-4 focus:ring-indigo-100"
+            />
+
+            <button
+              id="addTopicBtn"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 rounded-2xl font-black"
+            >
+              추가
             </button>
-        </div>
-    </header>
+          </div>
 
-    <!-- Admin Panel -->
-    <div id="adminPanel" class="hidden bg-indigo-50 border-b border-indigo-100 p-6 fade-in">
-        <div class="max-w-5xl mx-auto space-y-6">
-            <div class="flex justify-between items-center">
-                <h2 class="font-extrabold text-indigo-900 flex items-center gap-2">
-                    <i class="fa-solid fa-user-shield"></i> 의리T 관리 모드
-                </h2>
-                <button onclick="closeAdmin()" class="text-sm font-bold text-indigo-500 hover:text-indigo-700 underline">나가기</button>
-            </div>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-100">
-                    <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2">주제 관리</h3>
-                    <div class="flex gap-2 mb-4">
-                        <input type="text" id="newTopicInput" placeholder="오늘의 도덕 토론 주제는?" class="flex-1 border border-slate-200 rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500">
-                        <button onclick="addTopic()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold">추가</button>
-                    </div>
-                    <div id="adminTopicList" class="space-y-2"></div>
-                </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-100">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-slate-700">배정 관리</h3>
-                        <button onclick="resetData()" class="text-xs text-rose-500 font-bold">전체 리셋</button>
-                    </div>
-                    <div id="applicationStatus" class="space-y-3 max-h-60 overflow-y-auto"></div>
-                </div>
-            </div>
+          <div id="adminTopicList" class="space-y-2"></div>
         </div>
+
+        <!-- APPLY -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-indigo-100">
+          <div class="flex justify-between items-center mb-5">
+            <h3 class="font-black text-lg">
+              역할 신청 현황
+            </h3>
+
+            <button
+              id="resetBtn"
+              class="text-rose-500 font-black text-sm"
+            >
+              전체 초기화
+            </button>
+          </div>
+
+          <div
+            id="applicationList"
+            class="space-y-3 max-h-[450px] overflow-y-auto"
+          ></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <main class="max-w-6xl mx-auto px-4 mt-10 space-y-20">
+
+    <!-- SECTION 1 -->
+    <section class="fade-up">
+
+      <div class="flex items-center gap-4 mb-8">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white font-black flex items-center justify-center text-xl shadow-lg">
+          1
+        </div>
+
+        <h2 class="text-3xl font-black">
+          오늘의 도덕 토론 주제
+        </h2>
+      </div>
+
+      <div
+        id="topicList"
+        class="grid md:grid-cols-2 gap-6"
+      ></div>
+
+    </section>
+
+    <!-- SECTION 2 -->
+    <section class="fade-up">
+
+      <div class="flex items-center gap-4 mb-8">
+        <div class="w-12 h-12 rounded-2xl bg-violet-600 text-white font-black flex items-center justify-center text-xl shadow-lg">
+          2
+        </div>
+
+        <h2 class="text-3xl font-black">
+          토론 역할 탐색
+        </h2>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8">
+
+        <!-- 찬성 -->
+        <div class="flip-wrap h-80 cursor-pointer">
+          <div class="flip-inner">
+
+            <div class="flip-front bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-8 flex flex-col items-center justify-center shadow-2xl">
+              <i class="fa-solid fa-thumbs-up text-5xl mb-5"></i>
+
+              <h3 class="text-3xl font-black mb-3">
+                찬성 팀
+              </h3>
+
+              <p class="font-bold opacity-90 text-center">
+                찬성 입장을 논리적으로 주장해요
+              </p>
+            </div>
+
+            <div class="flip-back bg-white border-4 border-indigo-500 p-8 shadow-2xl flex flex-col justify-center">
+              <h4 class="font-black text-2xl text-indigo-700 mb-5">
+                세부 역할
+              </h4>
+
+              <div class="space-y-3 font-bold text-slate-700">
+                <div>✅ 입론 담당</div>
+                <div>✅ 반론 담당</div>
+                <div>✅ 자료 조사 담당</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 반대 -->
+        <div class="flip-wrap h-80 cursor-pointer">
+          <div class="flip-inner">
+
+            <div class="flip-front bg-gradient-to-br from-rose-500 to-red-600 text-white p-8 flex flex-col items-center justify-center shadow-2xl">
+              <i class="fa-solid fa-thumbs-down text-5xl mb-5"></i>
+
+              <h3 class="text-3xl font-black mb-3">
+                반대 팀
+              </h3>
+
+              <p class="font-bold opacity-90 text-center">
+                반대 입장을 논리적으로 주장해요
+              </p>
+            </div>
+
+            <div class="flip-back bg-white border-4 border-rose-500 p-8 shadow-2xl flex flex-col justify-center">
+              <h4 class="font-black text-2xl text-rose-700 mb-5">
+                세부 역할
+              </h4>
+
+              <div class="space-y-3 font-bold text-slate-700">
+                <div>✅ 입론 담당</div>
+                <div>✅ 반론 담당</div>
+                <div>✅ 반박 자료 조사</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 판정 -->
+        <div class="flip-wrap h-80 cursor-pointer">
+          <div class="flip-inner">
+
+            <div class="flip-front bg-gradient-to-br from-amber-400 to-orange-500 text-white p-8 flex flex-col items-center justify-center shadow-2xl">
+              <i class="fa-solid fa-scale-balanced text-5xl mb-5"></i>
+
+              <h3 class="text-3xl font-black mb-3">
+                판정단
+              </h3>
+
+              <p class="font-bold opacity-90 text-center">
+                양측 토론을 공정하게 평가해요
+              </p>
+            </div>
+
+            <div class="flip-back bg-white border-4 border-amber-500 p-8 shadow-2xl flex flex-col justify-center">
+              <h4 class="font-black text-2xl text-amber-700 mb-5">
+                세부 역할
+              </h4>
+
+              <div class="space-y-3 font-bold text-slate-700">
+                <div>✅ 토론 태도 평가</div>
+                <div>✅ 핵심 주장 정리</div>
+                <div>✅ 최종 판정 발표</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TIP -->
+    <section class="fade-up">
+      <div class="bg-indigo-900 rounded-[3rem] p-10 text-white shadow-2xl border-4 border-white flex gap-6 items-start">
+
+        <div class="w-24 h-24 rounded-3xl bg-indigo-600 flex items-center justify-center shrink-0 animate-pulse">
+          <i class="fa-solid fa-graduation-cap text-4xl text-amber-300"></i>
+        </div>
+
+        <div>
+          <h3 class="text-2xl font-black text-amber-300 mb-4">
+            의리T의 토론 꿀팁 🍯
+          </h3>
+
+          <p class="text-lg leading-relaxed font-bold text-indigo-50">
+            토론은 상대를 이기는 활동이 아니라,
+            서로의 생각을 더 깊게 만드는 과정입니다.
+            중요한 것은
+            <span class="text-amber-200">
+              논리적인 이유와 경청하는 태도
+            </span>
+            입니다.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- APPLY -->
+    <section class="fade-up">
+
+      <div
+        id="formSection"
+        class="bg-white rounded-[3rem] p-10 border border-slate-200 shadow-2xl"
+      >
+
+        <div class="grid lg:grid-cols-4 gap-6 mb-8">
+
+          <div>
+            <label class="block font-black mb-3 text-slate-500">
+              학생 이름
+            </label>
+
+            <input
+              id="studentName"
+              type="text"
+              placeholder="이름 입력"
+              class="w-full bg-slate-50 rounded-2xl px-5 py-4 border-2 border-slate-100 outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label class="block font-black mb-3 text-slate-500">
+              1지망
+            </label>
+
+            <select id="role1" class="w-full bg-indigo-50 rounded-2xl px-5 py-4 font-bold border-2 border-indigo-100">
+              <option>찬성</option>
+              <option>반대</option>
+              <option>판정단</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-black mb-3 text-slate-500">
+              2지망
+            </label>
+
+            <select id="role2" class="w-full bg-slate-50 rounded-2xl px-5 py-4 font-bold border-2 border-slate-100">
+              <option>반대</option>
+              <option>찬성</option>
+              <option>판정단</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-black mb-3 text-slate-500">
+              3지망
+            </label>
+
+            <select id="role3" class="w-full bg-slate-50 rounded-2xl px-5 py-4 font-bold border-2 border-slate-100">
+              <option>판정단</option>
+              <option>찬성</option>
+              <option>반대</option>
+            </select>
+          </div>
+
+        </div>
+
+        <button
+          id="submitBtn"
+          class="w-full py-5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white text-xl font-black shadow-xl transition active:scale-[0.98]"
+        >
+          참가 신청하기 🚀
+        </button>
+
+      </div>
+
+      <!-- SUCCESS -->
+      <div
+        id="successBox"
+        class="hidden bg-emerald-500 rounded-[3rem] p-16 text-white text-center shadow-2xl"
+      >
+        <i class="fa-solid fa-circle-check text-7xl mb-6"></i>
+
+        <h3 class="text-4xl font-black mb-4">
+          신청 완료!
+        </h3>
+
+        <p class="text-xl font-bold opacity-90">
+          의리T가 모둠을 배정하고 있어요 😊
+        </p>
+
+        <button
+          id="retryBtn"
+          class="mt-8 underline font-bold opacity-80"
+        >
+          다시 신청하기
+        </button>
+      </div>
+
+    </section>
+
+    <!-- SEAT -->
+    <section class="fade-up">
+
+      <div class="flex items-center gap-4 mb-8">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white font-black flex items-center justify-center text-xl shadow-lg">
+          3
+        </div>
+
+        <h2 class="text-3xl font-black">
+          토론 모둠 배치도
+        </h2>
+      </div>
+
+      <div class="bg-slate-900 rounded-[4rem] p-10 md:p-14 shadow-2xl border-[16px] border-slate-800 min-h-[800px]">
+
+        <div class="w-60 mx-auto bg-white rounded-b-3xl text-center py-4 font-black text-xl mb-14">
+          칠 판
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-14">
+
+          <!-- 찬성 -->
+          <div>
+
+            <div class="bg-blue-500/10 border border-blue-500/20 rounded-2xl py-4 text-center text-blue-400 font-black text-xl mb-6">
+              👍 찬성 팀 진영
+            </div>
+
+            <div class="space-y-4">
+
+              <div class="bg-white/5 rounded-2xl min-h-[90px] p-4 relative">
+                <div class="absolute top-2 left-4 text-5xl font-black text-blue-500/20">
+                  1
+                </div>
+
+                <div id="agree1" class="flex flex-wrap gap-2 pt-6"></div>
+              </div>
+
+              <div class="bg-white/5 rounded-2xl min-h-[90px] p-4 relative">
+                <div class="absolute top-2 left-4 text-5xl font-black text-blue-500/20">
+                  2
+                </div>
+
+                <div id="agree2" class="flex flex-wrap gap-2 pt-6"></div>
+              </div>
+
+              <div class="bg-white/5 rounded-2xl min-h-[90px] p-4 relative">
+                <div class="absolute top-2 left-4 text-5xl font-black text-blue-500/20">
+                  3
+                </div>
+
+                <div id="agree3" class="flex flex-wrap gap-2 pt-6"></div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 반대 -->
+          <div>
+
+            <div class="bg-rose-500/10 border border-rose-500/20 rounded-2xl py-4 text-center text-rose-400 font-black text-xl mb-6">
+              👎 반대 팀 진영
+            </div>
+
+            <div class="space-y-4">
+
+              <div class="bg-white/5 rounded-2xl min-h-[90px] p-4 relative">
+                <div class="absolute top-2 right-4 text-5xl font-black text-rose-500/20">
+                  1
+                </div>
+
+                <div id="oppose1" class="flex flex-wrap gap-2 pt-6 justify-end"></div>
+              </div>
+
+              <div class="bg-white/5 rounded-2xl min-h-[90px] p-4 relative">
+                <div class="absolute top-2 right-4 text-5xl font-black text-rose-500/20">
+                  2
+                </div>
+
+                <div id="oppose2" class="flex flex-wrap gap-2 pt-6 justify-end"></div>
+              </div>
+
+              <div class="bg-white/5 rounded-2xl min-h-[90px] p-4 relative">
+                <div class="absolute top-2 right-4 text-5xl font-black text-rose-500/20">
+                  3
+                </div>
+
+                <div id="oppose3" class="flex flex-wrap gap-2 pt-6 justify-end"></div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 판정단 -->
+        <div class="mt-16">
+
+          <div class="bg-amber-500/10 border border-amber-500/20 rounded-2xl py-4 text-center text-amber-400 font-black text-xl mb-6">
+            ⚖️ 판정단
+          </div>
+
+          <div
+            id="judgeSeat"
+            class="bg-white/5 rounded-[2rem] min-h-[100px] p-6 flex flex-wrap gap-3 justify-center"
+          ></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+<!-- 5. 수행평가 평가기준 -->
+<section class="fade-up">
+    
+    <div class="flex items-center gap-4 mb-8 px-2">
+        <span class="bg-amber-500 text-white w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-lg">
+            4
+        </span>
+
+        <h2 class="text-3xl font-black text-slate-800 tracking-tight">
+            수행평가 평가기준 확인하기
+        </h2>
     </div>
 
-    <main class="max-w-5xl mx-auto p-4 space-y-16 mt-10">
-        <!-- 1. 주제 투표 -->
-        <section class="fade-in">
-            <div class="flex items-center gap-4 mb-8 px-2">
-                <span class="bg-indigo-600 text-white w-10 h-10 rounded-2xl flex items-center justify-center font-black text-lg shadow-lg">1</span>
-                <h2 class="text-2xl font-black text-slate-800 tracking-tight">우리가 고민해볼 도덕적 주제는?</h2>
-            </div>
-            <div id="topicList" class="grid sm:grid-cols-2 gap-6"></div>
-        </section>
+    <div class="grid lg:grid-cols-3 gap-8">
 
-        <!-- 2. 역할 설명 카드 -->
-        <section class="fade-in">
-            <div class="flex items-center gap-4 mb-8 px-2">
-                <span class="bg-violet-600 text-white w-10 h-10 rounded-2xl flex items-center justify-center font-black text-lg shadow-lg">2</span>
-                <h2 class="text-2xl font-black text-slate-800 tracking-tight">나의 역할 탐색하기</h2>
-            </div>
+        <!-- 1 -->
+        <div class="bg-white rounded-[2.5rem] p-8 border border-slate-200 shadow-xl card-hover">
+            
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-indigo-100 flex items-center justify-center">
+                    <i class="fa-solid fa-pen-to-square text-3xl text-indigo-600"></i>
+                </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- 찬성/반대/판정단 카드 생략 없이 이전과 동일하게 유지 -->
-                <div class="perspective h-72 cursor-pointer group" onclick="this.querySelector('.flip-card-inner').classList.toggle('flipped')">
-                    <div class="flip-card-inner relative w-full h-full text-center shadow-xl shadow-indigo-100">
-                        <div class="flip-card-front absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex flex-col items-center justify-center p-8 border border-blue-400">
-                            <i class="fa-solid fa-thumbs-up text-4xl mb-4"></i>
-                            <h3 class="font-black text-2xl mb-2">찬성 팀</h3>
-                            <p class="text-sm opacity-90 font-bold">"찬성의 입장과 그 이유를 찾아요"</p>
-                        </div>
-                        <div class="flip-card-back absolute inset-0 bg-white text-indigo-700 flex flex-col items-center justify-center p-6 border-4 border-indigo-500 overflow-y-auto">
-                            <h4 class="font-black text-lg mb-3">찬성 팀의 세부 역할</h4>
-                            <div class="text-left text-xs space-y-2 font-bold">
-                                <p><span class="text-indigo-600">[입론]</span> 찬성해야 하는 논리적인 이유를 들어 주장 시작하기</p>
-                                <p><span class="text-indigo-600">[반론]</span> 상대방 주장의 허점을 찾아 날카롭게 질문하기</p>
-                                <p><span class="text-indigo-600">[자료정리]</span> 찬성을 뒷받침할 든든한 실제 사례와 자료 찾기</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="perspective h-72 cursor-pointer group" onclick="this.querySelector('.flip-card-inner').classList.toggle('flipped')">
-                    <div class="flip-card-inner relative w-full h-full text-center shadow-xl shadow-rose-100">
-                        <div class="flip-card-front absolute inset-0 bg-gradient-to-br from-rose-500 to-red-600 text-white flex flex-col items-center justify-center p-8 border border-rose-400">
-                            <i class="fa-solid fa-thumbs-down text-4xl mb-4"></i>
-                            <h3 class="font-black text-2xl mb-2">반대 팀</h3>
-                            <p class="text-sm opacity-90 font-bold">"반대의 입장과 그 이유를 찾아요"</p>
-                        </div>
-                        <div class="flip-card-back absolute inset-0 bg-white text-rose-700 flex flex-col items-center justify-center p-6 border-4 border-rose-500 overflow-y-auto">
-                            <h4 class="font-black text-lg mb-3">반대 팀의 세부 역할</h4>
-                            <div class="text-left text-xs space-y-2 font-bold">
-                                <p><span class="text-rose-600">[입론]</span> 반대해야 하는 논리적인 이유를 들어 주장 시작하기</p>
-                                <p><span class="text-rose-600">[반론]</span> 상대방 주장의 허점을 찾아 논리적으로 지적하기</p>
-                                <p><span class="text-rose-600">[자료정리]</span> 반대 근거가 될 실제 사례와 자료 찾기</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="perspective h-72 cursor-pointer group" onclick="this.querySelector('.flip-card-inner').classList.toggle('flipped')">
-                    <div class="flip-card-inner relative w-full h-full text-center shadow-xl shadow-amber-100">
-                        <div class="flip-card-front absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-500 text-white flex flex-col items-center justify-center p-8 border border-amber-300">
-                            <i class="fa-solid fa-scale-balanced text-4xl mb-4"></i>
-                            <h3 class="font-black text-2xl mb-2">판정단</h3>
-                            <p class="text-sm opacity-90 font-bold">"누가 더 논리적인지 관찰해요"</p>
-                        </div>
-                        <div class="flip-card-back absolute inset-0 bg-white text-amber-700 flex flex-col items-center justify-center p-6 border-4 border-amber-500 overflow-y-auto">
-                            <h4 class="font-black text-lg mb-3">판정단의 세부 역할</h4>
-                            <div class="text-left text-xs space-y-2 font-bold">
-                                <p><span class="text-amber-600">[판정]</span> 양측의 규칙 준수와 태도를 점수 매기기</p>
-                                <p><span class="text-amber-600">[내용정리]</span> 양측의 핵심 주장을 깔끔하게 요약하기</p>
-                                <p><span class="text-amber-600">[최종발표]</span> 왜 이 팀이 더 설득력이 있었는지 발표하기</p>
-                            </div>
-                        </div>
-                    </div>
+                <div>
+                    <p class="text-sm font-black text-indigo-500 uppercase">
+                        STEP 1
+                    </p>
+
+                    <h3 class="text-2xl font-black text-slate-800">
+                        생각 쓰기
+                    </h3>
                 </div>
             </div>
-        </section>
 
-        <!-- 의리T 한마디 -->
-        <div class="bg-indigo-900 text-white p-8 rounded-[2.5rem] shadow-2xl flex items-center gap-6 border-4 border-white">
-            <div class="bg-indigo-600 p-5 rounded-3xl animate-pulse shrink-0">
-                <i class="fa-solid fa-graduation-cap text-3xl text-amber-300"></i>
+            <div class="space-y-4 text-sm leading-relaxed">
+
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4">
+                    <p class="font-black text-emerald-700 mb-2">상</p>
+                    <p class="font-bold text-slate-700">
+                        도덕적 주제나 딜레마 상황을 깊이 이해하고,
+                        자신의 생각을 도덕적 관점에서 성의 있고
+                        구체적으로 작성함.
+                    </p>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4">
+                    <p class="font-black text-amber-700 mb-2">중</p>
+                    <p class="font-bold text-slate-700">
+                        자신의 생각을 도덕적 관점에서 작성함.
+                    </p>
+                </div>
+
+                <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4">
+                    <p class="font-black text-rose-700 mb-2">하</p>
+                    <p class="font-bold text-slate-700">
+                        도덕적 관점에서 생각을 작성하지 못하거나
+                        내용이 부족함.
+                    </p>
+                </div>
+
             </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="bg-white rounded-[2.5rem] p-8 border border-slate-200 shadow-xl card-hover">
+
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-violet-100 flex items-center justify-center">
+                    <i class="fa-solid fa-comments text-3xl text-violet-600"></i>
+                </div>
+
+                <div>
+                    <p class="text-sm font-black text-violet-500 uppercase">
+                        STEP 2
+                    </p>
+
+                    <h3 class="text-2xl font-black text-slate-800">
+                        토론하기
+                    </h3>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-sm leading-relaxed">
+
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4">
+                    <p class="font-black text-emerald-700 mb-2">상</p>
+                    <p class="font-bold text-slate-700">
+                        자신의 의견을 논리적이고 자신 있게 발표하며,
+                        타인의 의견을 경청하는 태도가 매우 우수함.
+                    </p>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4">
+                    <p class="font-black text-amber-700 mb-2">중</p>
+                    <p class="font-bold text-slate-700">
+                        자신의 의견을 발표하고,
+                        타인의 의견을 경청함.
+                    </p>
+                </div>
+
+                <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4">
+                    <p class="font-black text-rose-700 mb-2">하</p>
+                    <p class="font-bold text-slate-700">
+                        의견 발표와 경청 태도가 부족하거나
+                        미흡함.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="bg-white rounded-[2.5rem] p-8 border border-slate-200 shadow-xl card-hover">
+
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-emerald-100 flex items-center justify-center">
+                    <i class="fa-solid fa-folder-open text-3xl text-emerald-600"></i>
+                </div>
+
+                <div>
+                    <p class="text-sm font-black text-emerald-500 uppercase">
+                        STEP 3
+                    </p>
+
+                    <h3 class="text-2xl font-black text-slate-800">
+                        생각 정리하기
+                    </h3>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-sm leading-relaxed">
+
+                <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-4">
+                    <p class="font-black text-emerald-700 mb-2">상</p>
+                    <p class="font-bold text-slate-700">
+                        자신의 의견을 논리적이고 구체적으로 정리하며,
+                        포트폴리오를 80% 이상 완성함.
+                    </p>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-100 rounded-2xl p-4">
+                    <p class="font-black text-amber-700 mb-2">중</p>
+                    <p class="font-bold text-slate-700">
+                        자신의 의견을 정리하며,
+                        포트폴리오를 60~80% 미만 완성함.
+                    </p>
+                </div>
+
+                <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4">
+                    <p class="font-black text-rose-700 mb-2">하</p>
+                    <p class="font-bold text-slate-700">
+                        의견 정리가 부족하거나
+                        포트폴리오 완성도가 낮음.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 의리T 한마디 -->
+    <div class="mt-10 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-[2.5rem] p-8 shadow-2xl">
+
+        <div class="flex items-start gap-5">
+
+            <div class="w-20 h-20 rounded-3xl bg-white/20 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-star text-4xl text-yellow-300"></i>
+            </div>
+
             <div>
-                <h4 class="font-black text-xl mb-2 text-amber-300">의리T가 알려주는 토론 꿀팁! 🐝</h4>
-                <p class="text-lg font-bold leading-relaxed text-indigo-50">
-                    "토론 수행평가는 내 목소리를 크게 내는 게 목표가 아니에요! <span class="text-amber-200">상대방의 의견을 잘 듣고 논리적인 이유를 말하는 것</span>이 핵심입니다!"
+                <h3 class="text-2xl font-black mb-3">
+                    수행평가에서 가장 중요한 것은?
+                </h3>
+
+                <p class="text-lg leading-relaxed font-bold text-indigo-50">
+                    “정답”보다 중요한 것은
+                    <span class="text-yellow-300">
+                        자신의 생각을 도덕적 근거와 함께 논리적으로 설명하는 태도
+                    </span>
+                    입니다. 친구의 의견을 존중하며 경청하는 모습도 중요한 평가 요소예요!
                 </p>
             </div>
+
         </div>
 
-        <!-- 3. 역할 신청 폼 -->
-        <section class="fade-in">
-            <div id="roleFormSection" class="bg-white rounded-[3rem] p-10 border-2 border-slate-200 shadow-xl hover-card">
-                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="col-span-1 lg:col-span-1">
-                        <label class="block text-sm font-black text-slate-500 mb-3 ml-1 uppercase">학생 이름</label>
-                        <input type="text" id="applyName" placeholder="이름을 입력하세요." class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-4 text-lg font-bold focus:border-indigo-500 outline-none transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-black text-slate-500 mb-3 ml-1 uppercase">1지망</label>
-                        <select id="applyRole1" class="w-full bg-indigo-50 border-2 border-indigo-100 rounded-2xl px-5 py-4 font-bold outline-none cursor-pointer text-indigo-700">
-                            <option value="찬성">👍 찬성 팀</option>
-                            <option value="반대">👎 반대 팀</option>
-                            <option value="판정단">⚖️ 판정단</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-black text-slate-500 mb-3 ml-1 uppercase">2지망</label>
-                        <select id="applyRole2" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-4 font-bold outline-none cursor-pointer">
-                            <option value="반대">👎 반대 팀</option>
-                            <option value="찬성">👍 찬성 팀</option>
-                            <option value="판정단">⚖️ 판정단</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-black text-slate-500 mb-3 ml-1 uppercase">3지망</label>
-                        <select id="applyRole3" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-4 font-bold outline-none cursor-pointer">
-                            <option value="판정단">⚖️ 판정단</option>
-                            <option value="찬성">👍 찬성 팀</option>
-                            <option value="반대">👎 반대 팀</option>
-                        </select>
-                    </div>
-                </div>
-                <button onclick="submitRole()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-5 rounded-2xl font-black text-xl shadow-xl hover:shadow-indigo-200 active:scale-95 transition-all flex items-center justify-center gap-3">
-                    참가 신청하기! <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
-            <div id="submittedView" class="hidden bg-emerald-500 text-white rounded-[3rem] p-16 text-center shadow-xl fade-in">
-                <i class="fa-solid fa-circle-check text-6xl mb-6"></i>
-                <h3 class="font-black text-3xl mb-4">신청 완료!</h3>
-                <p class="text-xl font-bold opacity-90 italic">의리T가 모둠을 배정할 때까지 기다려주세요!</p>
-            </div>
-        </section>
-
-        <!-- 4. 토론 모둠 배치도 -->
-        <section class="fade-in">
-            <div class="flex items-center gap-4 mb-8 px-2">
-                <span class="bg-emerald-600 text-white w-10 h-10 rounded-2xl flex items-center justify-center font-black text-lg shadow-lg">3</span>
-                <h2 class="text-2xl font-black text-slate-800 tracking-tight">토론 모둠 배치도</h2>
-            </div>
-            <div class="relative bg-slate-900 rounded-[4rem] p-12 border-[16px] border-slate-800 shadow-2xl overflow-hidden min-h-[800px] flex flex-col">
-                <div class="w-56 mx-auto bg-white text-slate-900 text-center py-4 rounded-b-3xl mb-16 font-black text-xl tracking-widest shadow-2xl">칠 판</div>
-                <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-32 lg:gap-48 items-start px-4">
-                    <div class="space-y-8">
-                        <div class="text-center font-black text-blue-400 text-xl tracking-wider flex items-center justify-center gap-3 bg-blue-400/10 py-4 rounded-2xl border border-blue-400/20">찬성 팀</div>
-                        <div class="space-y-6">
-                            <div class="bg-white/5 p-6 rounded-[2rem] min-h-[120px] shadow-inner border border-white/10" id="seat-pro-1"></div>
-                            <div class="bg-white/5 p-6 rounded-[2rem] min-h-[120px] shadow-inner border border-white/10" id="seat-pro-2"></div>
-                            <div class="bg-white/5 p-6 rounded-[2rem] min-h-[120px] shadow-inner border border-white/10" id="seat-pro-3"></div>
-                        </div>
-                    </div>
-                    <div class="space-y-8">
-                        <div class="text-center font-black text-rose-400 text-xl tracking-wider flex items-center justify-center gap-3 bg-rose-400/10 py-4 rounded-2xl border border-rose-400/20">반대 팀</div>
-                        <div class="space-y-6">
-                            <div class="bg-white/5 p-6 rounded-[2rem] min-h-[120px] shadow-inner border border-white/10" id="seat-con-1"></div>
-                            <div class="bg-white/5 p-6 rounded-[2rem] min-h-[120px] shadow-inner border border-white/10" id="seat-con-2"></div>
-                            <div class="bg-white/5 p-6 rounded-[2rem] min-h-[120px] shadow-inner border border-white/10" id="seat-con-3"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-20 w-full md:w-1/2 mx-auto space-y-6">
-                    <div class="text-center font-black text-amber-400 text-xl tracking-wider flex items-center gap-3 justify-center bg-amber-400/10 py-4 rounded-2xl border border-amber-400/20">판정단</div>
-                    <div class="bg-white/5 p-8 rounded-[2rem] min-h-[100px] flex items-center justify-center border border-white/10" id="seat-judge-1"></div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Modals -->
-    <div id="modalOverlay" class="fixed inset-0 bg-slate-900/60 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-white rounded-[3rem] p-10 max-w-sm w-full shadow-2xl text-center">
-            <div id="modalIcon" class="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6"></div>
-            <h3 id="modalTitle" class="font-black text-2xl mb-3 text-slate-800"></h3>
-            <p id="modalMsg" class="text-slate-500 font-bold mb-8 leading-relaxed"></p>
-            <button onclick="closeModal()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-lg shadow-lg">확인</button>
-        </div>
     </div>
 
-    <div id="pwOverlay" class="fixed inset-0 bg-slate-900/60 hidden z-[100] flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-white rounded-[3rem] p-10 max-w-sm w-full shadow-2xl text-center">
-            <i class="fa-solid fa-lock text-4xl text-indigo-600 mb-6"></i>
-            <h3 class="font-black text-2xl mb-4 text-slate-800">의리T 전용 로그인</h3>
-            <input type="password" id="adminPw" placeholder="패스워드 입력" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-5 mb-6 text-center text-2xl font-bold outline-none focus:ring-4 focus:ring-indigo-200 tracking-widest">
-            <div class="flex gap-4">
-                <button onclick="closePwModal()" class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold">취소</button>
-                <button onclick="loginAdmin()" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg">인증</button>
-            </div>
-        </div>
+</section>
+
+
+  </main>
+
+  <!-- PASSWORD -->
+  <div
+    id="pwModal"
+    class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+  >
+
+    <div class="bg-white rounded-[3rem] p-10 w-full max-w-md shadow-2xl text-center">
+
+      <div class="w-24 h-24 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <i class="fa-solid fa-lock text-4xl text-indigo-600"></i>
+      </div>
+
+      <h3 class="text-3xl font-black mb-6">
+        관리자 로그인
+      </h3>
+
+      <input
+        id="pwInput"
+        type="password"
+        placeholder="비밀번호 입력"
+        class="w-full bg-slate-50 rounded-2xl px-5 py-5 text-center text-2xl font-black outline-none border border-slate-200 mb-6"
+      />
+
+      <div class="flex gap-4">
+
+        <button
+          id="cancelPwBtn"
+          class="flex-1 py-4 rounded-2xl bg-slate-100 font-black"
+        >
+          취소
+        </button>
+
+        <button
+          id="loginBtn"
+          class="flex-1 py-4 rounded-2xl bg-indigo-600 text-white font-black"
+        >
+          로그인
+        </button>
+
+      </div>
+
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, collection, onSnapshot, updateDoc, increment, addDoc, deleteDoc, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+  </div>
 
-        // Global Setup
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'debate-lab-v1';
+  <script>
 
-        let currentUser = null;
-        let isAdmin = sessionStorage.getItem('isAdmin') === 'true'; // 세션 저장소 사용하여 로그인 유지
+    /* ------------------------------
+      TOPIC DATA
+    ------------------------------ */
 
-        // UI Helpers
-        window.showAlert = (title, msg, iconClass = 'fa-bell') => {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalMsg').innerText = msg;
-            document.getElementById('modalIcon').innerHTML = `<i class="fa-solid ${iconClass} text-3xl"></i>`;
-            document.getElementById('modalOverlay').classList.remove('hidden');
-        };
-        window.closeModal = () => document.getElementById('modalOverlay').classList.add('hidden');
-        window.checkAdminAccess = () => {
-            if(isAdmin) {
-                document.getElementById('adminPanel').classList.remove('hidden');
-            } else {
-                document.getElementById('pwOverlay').classList.remove('hidden');
-            }
-        };
-        window.closePwModal = () => document.getElementById('pwOverlay').classList.add('hidden');
-        window.loginAdmin = () => {
-            const pw = document.getElementById('adminPw').value;
-            if(pw === '1234') {
-                isAdmin = true;
-                sessionStorage.setItem('isAdmin', 'true');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                document.getElementById('pwOverlay').classList.add('hidden');
-                document.getElementById('adminPw').value = "";
-                showAlert("환영합니다 의리T!", "관리자 모드가 활성화되었습니다.");
-            } else {
-                alert("비밀번호가 올바르지 않습니다.");
-            }
-        };
-        window.closeAdmin = () => {
-            document.getElementById('adminPanel').classList.add('hidden');
-        };
+    let topics = [
+      {title:"AI 판사는 인간 판사를 대신할 수 있을까?", votes:12},
+      {title:"학교 CCTV는 학생 인권 침해일까?", votes:8},
+      {title:"게임 셧다운제는 필요한가?", votes:15},
+      {title:"동물실험은 허용되어야 하는가?", votes:10}
+    ];
 
-        // Firebase Auth & Init
-        const init = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (e) { console.error("Auth error", e); }
-        };
+    let applications = [];
+    let isAdmin = false;
 
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            if (user) {
-                startSync();
-                if(isAdmin) document.getElementById('adminPanel').classList.remove('hidden');
-            }
-        });
+    /* ------------------------------
+      RENDER TOPICS
+    ------------------------------ */
 
-        function startSync() {
-            if (!currentUser) return;
-            const topicsCol = collection(db, 'artifacts', appId, 'public', 'data', 'topics');
-            const appsCol = collection(db, 'artifacts', appId, 'public', 'data', 'applications');
-            const seatsCol = collection(db, 'artifacts', appId, 'public', 'data', 'seats');
+    function renderTopics(){
 
-            onSnapshot(topicsCol, snap => {
-                const topics = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                renderTopics(topics);
-                renderAdminTopics(topics);
-            }, err => console.error(err));
+      const list = document.getElementById("topicList");
+      list.innerHTML = "";
 
-            onSnapshot(appsCol, snap => {
-                const apps = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                renderAdminApps(apps);
-            }, err => console.error(err));
+      const max = Math.max(...topics.map(t=>t.votes),1);
 
-            onSnapshot(seatsCol, snap => {
-                const seats = snap.docs.map(d => d.data());
-                renderSeats(seats);
-            }, err => console.error(err));
-        }
+      topics.forEach((topic,index)=>{
 
-        // Logic Functions
-        window.addTopic = async () => {
-            const val = document.getElementById('newTopicInput').value.trim();
-            if(!val) return;
-            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'topics'), { 
-                title: val, votes: 0, order: Date.now() 
-            });
-            document.getElementById('newTopicInput').value = "";
+        const percent = (topic.votes/max)*100;
+
+        const card = document.createElement("div");
+
+        card.className =
+          "relative overflow-hidden bg-white rounded-[2rem] p-7 shadow-xl border border-white cursor-pointer card-hover";
+
+        card.innerHTML = `
+          <div
+            class="topic-progress bg-indigo-50"
+            style="width:${percent}%"
+          ></div>
+
+          <div class="relative flex items-center justify-between z-10">
+
+            <div>
+              <div class="text-lg font-black text-slate-800 leading-relaxed">
+                ${topic.title}
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 text-indigo-600 font-black text-lg">
+              <i class="fa-solid fa-fire text-orange-400"></i>
+              ${topic.votes}
+            </div>
+
+          </div>
+        `;
+
+        card.onclick = ()=>{
+          topics[index].votes++;
+          renderTopics();
         };
 
-        window.deleteTopic = async (id) => {
-            if(confirm("이 주제를 삭제할까요?")) {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'topics', id));
-            }
-        };
+        list.appendChild(card);
 
-        window.voteTopic = async (id) => {
-            if(localStorage.getItem('voted_'+id)) {
-                showAlert("이미 참여함", "이 주제에는 이미 투표하셨어요!");
-                return;
-            }
-            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'topics', id), { votes: increment(1) });
-            localStorage.setItem('voted_'+id, 'true');
-            showAlert("투표 완료", "당신의 의견이 전달되었습니다!", "fa-check");
-        };
+      });
 
-        window.submitRole = async () => {
-            const name = document.getElementById('applyName').value.trim();
-            const r1 = document.getElementById('applyRole1').value;
-            const r2 = document.getElementById('applyRole2').value;
-            const r3 = document.getElementById('applyRole3').value;
-            if(!name) { showAlert("이름 필요", "이름을 꼭 적어주세요!"); return; }
-            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'applications'), { 
-                name, role1: r1, role2: r2, role3: r3, timestamp: Date.now() 
-            });
-            document.getElementById('roleFormSection').classList.add('hidden');
-            document.getElementById('submittedView').classList.remove('hidden');
-        };
+      renderAdminTopics();
 
-        window.assignSeat = async (appIdKey, val) => {
-            if(!val) return;
-            const [role, group] = val.split('-');
-            const apps = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'applications'));
-            let name = "학생";
-            apps.forEach(d => { if(d.id === appIdKey) name = d.data().name; });
-            
-            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'seats', `seat_${appIdKey}`), { 
-                name, role, group 
-            });
-        };
+    }
 
-        // Render Helpers
-        function renderTopics(topics) {
-            const list = document.getElementById('topicList');
-            list.innerHTML = "";
-            const max = Math.max(...topics.map(t => t.votes), 1);
-            topics.sort((a,b) => a.order - b.order).forEach(t => {
-                const p = (t.votes / max) * 100;
-                const div = document.createElement('div');
-                div.className = "relative cursor-pointer overflow-hidden rounded-[2rem] bg-white p-7 shadow-lg border-2 border-white group";
-                div.onclick = () => window.voteTopic(t.id);
-                div.innerHTML = `
-                    <div class="absolute inset-y-0 left-0 bg-indigo-50 transition-all duration-1000" style="width: ${p}%"></div>
-                    <div class="relative flex justify-between items-center z-10">
-                        <span class="font-black text-slate-800">${t.title}</span>
-                        <span class="text-indigo-600 font-black">${t.votes}</span>
-                    </div>
-                `;
-                list.appendChild(div);
-            });
-        }
+    /* ------------------------------
+      ADMIN TOPIC
+    ------------------------------ */
 
-        function renderAdminTopics(topics) {
-            const cont = document.getElementById('adminTopicList');
-            cont.innerHTML = topics.map(t => `
-                <div class="flex justify-between items-center bg-white p-3 rounded-xl text-xs font-bold border border-indigo-50">
-                    <span>${t.title}</span>
-                    <button onclick="deleteTopic('${t.id}')" class="text-rose-400"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            `).join('');
-        }
+    function renderAdminTopics(){
 
-        function renderAdminApps(apps) {
-            const cont = document.getElementById('applicationStatus');
-            cont.innerHTML = apps.map(a => `
-                <div class="p-3 bg-indigo-50/50 rounded-xl border border-indigo-100 text-[10px] space-y-2">
-                    <div class="flex justify-between font-black">
-                        <span>${a.name}</span>
-                        <span class="text-indigo-500">1지망: ${a.role1}</span>
-                    </div>
-                    <select onchange="assignSeat('${a.id}', this.value)" class="w-full p-1 rounded border">
-                        <option value="">배정 선택</option>
-                        <option value="찬성-1">찬성 1모둠</option><option value="찬성-2">찬성 2모둠</option><option value="찬성-3">찬성 3모둠</option>
-                        <option value="반대-1">반대 1모둠</option><option value="반대-2">반대 2모둠</option><option value="반대-3">반대 3모둠</option>
-                        <option value="판정단-1">판정단</option>
-                    </select>
-                </div>
-            `).join('');
-        }
+      const wrap = document.getElementById("adminTopicList");
 
-        function renderSeats(seats) {
-            document.querySelectorAll('[id^="seat-"]').forEach(el => el.innerHTML = "");
-            seats.forEach(s => {
-                const tid = `seat-${s.role === '찬성' ? 'pro' : s.role === '반대' ? 'con' : 'judge'}-${s.group}`;
-                const container = document.getElementById(tid);
-                if(container) {
-                    const span = document.createElement('span');
-                    span.className = "inline-block px-4 py-2 bg-white text-slate-900 text-xs font-black rounded-xl m-1 shadow-md border border-white/20";
-                    span.innerText = s.name;
-                    container.appendChild(span);
-                }
-            });
-        }
+      wrap.innerHTML = "";
 
-        window.resetData = async () => {
-            if(!confirm("모든 데이터를 초기화할까요?")) return;
-            const q1 = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'applications'));
-            const q2 = await getDocs(collection(db, 'artifacts', appId, 'public', 'data', 'seats'));
-            q1.forEach(async d => await deleteDoc(d.ref));
-            q2.forEach(async d => await deleteDoc(d.ref));
-            location.reload();
-        };
+      topics.forEach((topic,index)=>{
 
-        init();
-    </script>
+        const item = document.createElement("div");
+
+        item.className =
+          "bg-indigo-50 rounded-2xl px-4 py-3 flex justify-between items-center";
+
+        item.innerHTML = `
+          <span class="font-bold text-sm">${topic.title}</span>
+
+          <button
+            onclick="deleteTopic(${index})"
+            class="text-rose-500"
+          >
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        `;
+
+        wrap.appendChild(item);
+
+      });
+
+    }
+
+    function deleteTopic(index){
+      topics.splice(index,1);
+      renderTopics();
+    }
+
+    /* ------------------------------
+      ADD TOPIC
+    ------------------------------ */
+
+    document.getElementById("addTopicBtn").onclick = ()=>{
+
+      const input = document.getElementById("newTopicInput");
+
+      const value = input.value.trim();
+
+      if(!value) return;
+
+      topics.push({
+        title:value,
+        votes:0
+      });
+
+      input.value = "";
+
+      renderTopics();
+
+    };
+
+    /* ------------------------------
+      FLIP CARD
+    ------------------------------ */
+
+    document.querySelectorAll(".flip-wrap").forEach(card=>{
+
+      card.addEventListener("click",()=>{
+
+        card.querySelector(".flip-inner").classList.toggle("active");
+
+      });
+
+    });
+
+    /* ------------------------------
+      APPLY
+    ------------------------------ */
+
+    document.getElementById("submitBtn").onclick = ()=>{
+
+      const name =
+        document.getElementById("studentName").value.trim();
+
+      if(!name){
+        alert("이름을 입력해주세요.");
+        return;
+      }
+
+      const role1 =
+        document.getElementById("role1").value;
+
+      const role2 =
+        document.getElementById("role2").value;
+
+      const role3 =
+        document.getElementById("role3").value;
+
+      applications.push({
+        name,
+        role1,
+        role2,
+        role3
+      });
+
+      renderApplications();
+
+      document.getElementById("formSection").classList.add("hidden");
+      document.getElementById("successBox").classList.remove("hidden");
+
+    };
+
+    document.getElementById("retryBtn").onclick = ()=>{
+
+      document.getElementById("formSection").classList.remove("hidden");
+      document.getElementById("successBox").classList.add("hidden");
+
+    };
+
+    /* ------------------------------
+      ADMIN APPLICATION
+    ------------------------------ */
+
+    function renderApplications(){
+
+      const list =
+        document.getElementById("applicationList");
+
+      list.innerHTML = "";
+
+      applications.forEach((app,index)=>{
+
+        const div = document.createElement("div");
+
+        div.className =
+          "bg-indigo-50 rounded-2xl p-4 border border-indigo-100";
+
+        div.innerHTML = `
+          <div class="flex justify-between mb-3">
+            <span class="font-black">${app.name}</span>
+            <span class="text-indigo-600 font-black text-sm">
+              1지망: ${app.role1}
+            </span>
+          </div>
+
+          <select
+            onchange="assignSeat('${app.name}',this.value)"
+            class="w-full rounded-xl border border-indigo-200 px-3 py-2 font-bold"
+          >
+            <option value="">모둠 배정 선택</option>
+
+            <optgroup label="찬성">
+              <option value="agree1">찬성 1모둠</option>
+              <option value="agree2">찬성 2모둠</option>
+              <option value="agree3">찬성 3모둠</option>
+            </optgroup>
+
+            <optgroup label="반대">
+              <option value="oppose1">반대 1모둠</option>
+              <option value="oppose2">반대 2모둠</option>
+              <option value="oppose3">반대 3모둠</option>
+            </optgroup>
+
+            <optgroup label="판정단">
+              <option value="judgeSeat">판정단</option>
+            </optgroup>
+          </select>
+        `;
+
+        list.appendChild(div);
+
+      });
+
+    }
+
+    /* ------------------------------
+      ASSIGN
+    ------------------------------ */
+
+    function assignSeat(name,targetId){
+
+      if(!targetId) return;
+
+      const target =
+        document.getElementById(targetId);
+
+      const badge =
+        document.createElement("div");
+
+      badge.className =
+        "seat-badge px-4 py-2 rounded-xl bg-white text-slate-900 font-black text-sm shadow-lg";
+
+      badge.innerText = name;
+
+      target.appendChild(badge);
+
+    }
+
+    /* ------------------------------
+      RESET
+    ------------------------------ */
+
+    document.getElementById("resetBtn").onclick = ()=>{
+
+      if(!confirm("전체 데이터를 초기화할까요?")) return;
+
+      applications = [];
+
+      renderApplications();
+
+      [
+        "agree1",
+        "agree2",
+        "agree3",
+        "oppose1",
+        "oppose2",
+        "oppose3",
+        "judgeSeat"
+      ].forEach(id=>{
+
+        document.getElementById(id).innerHTML = "";
+
+      });
+
+    };
+
+    /* ------------------------------
+      ADMIN LOGIN
+    ------------------------------ */
+
+    const pwModal =
+      document.getElementById("pwModal");
+
+    document.getElementById("adminBtn").onclick = ()=>{
+
+      if(isAdmin){
+
+        document
+          .getElementById("adminPanel")
+          .classList.toggle("hidden");
+
+      }else{
+
+        pwModal.classList.remove("hidden");
+
+      }
+
+    };
+
+    document.getElementById("cancelPwBtn").onclick = ()=>{
+
+      pwModal.classList.add("hidden");
+
+    };
+
+    document.getElementById("loginBtn").onclick = ()=>{
+
+      const pw =
+        document.getElementById("pwInput").value;
+
+      if(pw === "1234"){
+
+        isAdmin = true;
+
+        pwModal.classList.add("hidden");
+
+        document
+          .getElementById("adminPanel")
+          .classList.remove("hidden");
+
+      }else{
+
+        alert("비밀번호가 올바르지 않습니다.");
+
+      }
+
+    };
+
+    document.getElementById("closeAdminBtn").onclick = ()=>{
+
+      document
+        .getElementById("adminPanel")
+        .classList.add("hidden");
+
+    };
+
+    /* ------------------------------
+      INIT
+    ------------------------------ */
+
+    renderTopics();
+
+  </script>
+
 </body>
 </html>
