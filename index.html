@@ -522,7 +522,7 @@
           칠 판
         </div>
 
-        <div class="grid lg:grid-cols-2 gap-14">
+        <div class="grid lg:grid-cols-[1fr_220px_1fr] gap-10 items-start">
 
           <!-- 찬성 -->
           <div>
@@ -538,7 +538,7 @@
                   1
                 </div>
 
-                <div id="agree1" class="flex flex-wrap gap-2 pt-6"></div>
+                <div id="agree1" class="flex flex-wrap gap-2 pt-14"></div>
               </div>
 
               <div class="bg-white/5 rounded-2xl min-h-[90px] p-4 relative">
@@ -546,7 +546,7 @@
                   2
                 </div>
 
-                <div id="agree2" class="flex flex-wrap gap-2 pt-6"></div>
+                <div id="agree2" class="flex flex-wrap gap-2 pt-14"></div>
               </div>
 
               <div class="bg-white/5 rounded-2xl min-h-[90px] p-4 relative">
@@ -554,12 +554,31 @@
                   3
                 </div>
 
-                <div id="agree3" class="flex flex-wrap gap-2 pt-6"></div>
+                <div id="agree3" class="flex flex-wrap gap-2 pt-14"></div>
               </div>
 
             </div>
           </div>
 
+          <!-- 중앙 통로 -->
+          <div class="hidden lg:flex items-center justify-center h-full">
+
+            <div class="flex flex-col items-center gap-6 opacity-70">
+
+              <div class="w-2 h-32 bg-slate-600 rounded-full"></div>
+
+              <div class="text-center text-slate-400 font-black text-lg leading-relaxed">
+                교실 중앙 통로
+                <br>
+                서로 마주보며 토론!
+              </div>
+
+              <div class="w-2 h-32 bg-slate-600 rounded-full"></div>
+
+            </div>
+
+          </div>
+          
           <!-- 반대 -->
           <div>
 
@@ -574,7 +593,7 @@
                   1
                 </div>
 
-                <div id="oppose1" class="flex flex-wrap gap-2 pt-6 justify-end"></div>
+                <div id="oppose1" class="flex flex-wrap gap-2 pt-14 justify-end"></div>
               </div>
 
               <div class="bg-white/5 rounded-2xl min-h-[90px] p-4 relative">
@@ -582,7 +601,7 @@
                   2
                 </div>
 
-                <div id="oppose2" class="flex flex-wrap gap-2 pt-6 justify-end"></div>
+                <div id="oppose2" class="flex flex-wrap gap-2 pt-14 justify-end"></div>
               </div>
 
               <div class="bg-white/5 rounded-2xl min-h-[90px] p-4 relative">
@@ -590,7 +609,7 @@
                   3
                 </div>
 
-                <div id="oppose3" class="flex flex-wrap gap-2 pt-6 justify-end"></div>
+                <div id="oppose3" class="flex flex-wrap gap-2 pt-14 justify-end"></div>
               </div>
 
             </div>
@@ -868,6 +887,7 @@
     ];
 
     let applications = [];
+    let submittedStudents = [];
     let isAdmin = false;
 
     /* ------------------------------
@@ -1056,6 +1076,10 @@
         alert("이름을 입력해주세요.");
         return;
       }
+      if(submittedStudents.includes(name)){
+        alert("이미 신청한 학생입니다.");
+        return;
+      }
 
       const role1 =
         document.getElementById("role1").value;
@@ -1072,6 +1096,7 @@
         role2,
         role3
       });
+      submittedStudents.push(name);
 
       renderApplications();
 
@@ -1106,11 +1131,28 @@
           "bg-indigo-50 rounded-2xl p-4 border border-indigo-100";
 
         div.innerHTML = `
-          <div class="flex justify-between mb-3">
-            <span class="font-black">${app.name}</span>
-            <span class="text-indigo-600 font-black text-sm">
-              1지망: ${app.role1}
-            </span>
+          <div class="mb-3">
+
+            <div class="font-black text-lg mb-2">
+              ${app.name}
+            </div>
+
+            <div class="flex flex-wrap gap-2 text-sm font-black">
+
+              <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-xl">
+                1지망 : ${app.role1}
+              </span>
+
+              <span class="bg-violet-100 text-violet-700 px-3 py-1 rounded-xl">
+                2지망 : ${app.role2}
+              </span>
+
+              <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-xl">
+                3지망 : ${app.role3}
+              </span>
+
+            </div>
+
           </div>
 
           <select
