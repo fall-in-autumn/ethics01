@@ -91,7 +91,7 @@
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-100">
                     <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2">주제 관리</h3>
                     <div class="flex gap-2 mb-4">
-                        <input type="text" id="newTopicInput" placeholder="오늘의 딜레마 주제는?" class="flex-1 border border-slate-200 rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <input type="text" id="newTopicInput" placeholder="오늘의 도덕 토론 주제는?" class="flex-1 border border-slate-200 rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-indigo-500">
                         <button onclick="addTopic()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold">추가</button>
                     </div>
                     <div id="adminTopicList" class="space-y-2"></div>
@@ -131,14 +131,14 @@
                         <div class="flip-card-front absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex flex-col items-center justify-center p-8 border border-blue-400">
                             <i class="fa-solid fa-thumbs-up text-4xl mb-4"></i>
                             <h3 class="font-black text-2xl mb-2">찬성 팀</h3>
-                            <p class="text-sm opacity-90 font-bold">"변화가 필요한 이유를 찾아요"</p>
+                            <p class="text-sm opacity-90 font-bold">"찬성의 입장과 그 이유를 찾아요"</p>
                         </div>
                         <div class="flip-card-back absolute inset-0 bg-white text-indigo-700 flex flex-col items-center justify-center p-6 border-4 border-indigo-500 overflow-y-auto">
                             <h4 class="font-black text-lg mb-3">찬성 팀의 세부 역할</h4>
                             <div class="text-left text-xs space-y-2 font-bold">
-                                <p><span class="text-indigo-600">[입론]</span> 논리적인 이유를 들어 주장 시작하기</p>
-                                <p><span class="text-indigo-600">[반론]</span> 상대방의 허점을 찾아 날카롭게 질문하기</p>
-                                <p><span class="text-indigo-600">[자료정리]</span> 주장을 뒷받침할 든든한 증거 찾기</p>
+                                <p><span class="text-indigo-600">[입론]</span> 찬성해야 하는 논리적인 이유를 들어 주장 시작하기</p>
+                                <p><span class="text-indigo-600">[반론]</span> 상대방 주장의 허점을 찾아 날카롭게 질문하기</p>
+                                <p><span class="text-indigo-600">[자료정리]</span> 찬성을 뒷받침할 든든한 실제 사례와 자료 찾기</p>
                             </div>
                         </div>
                     </div>
@@ -148,13 +148,13 @@
                         <div class="flip-card-front absolute inset-0 bg-gradient-to-br from-rose-500 to-red-600 text-white flex flex-col items-center justify-center p-8 border border-rose-400">
                             <i class="fa-solid fa-thumbs-down text-4xl mb-4"></i>
                             <h3 class="font-black text-2xl mb-2">반대 팀</h3>
-                            <p class="text-sm opacity-90 font-bold">"생길 수 있는 문제를 걱정해요"</p>
+                            <p class="text-sm opacity-90 font-bold">"반대의 입장과 그 이유를 찾아요"</p>
                         </div>
                         <div class="flip-card-back absolute inset-0 bg-white text-rose-700 flex flex-col items-center justify-center p-6 border-4 border-rose-500 overflow-y-auto">
                             <h4 class="font-black text-lg mb-3">반대 팀의 세부 역할</h4>
                             <div class="text-left text-xs space-y-2 font-bold">
-                                <p><span class="text-rose-600">[입론]</span> 반대해야 하는 이유를 논리적으로 설명하기</p>
-                                <p><span class="text-rose-600">[반론]</span> 상대방 주장의 위험한 점을 지적하기</p>
+                                <p><span class="text-rose-600">[입론]</span> 반대해야 하는 논리적인 이유를 들어 주장 시작하기</p>
+                                <p><span class="text-rose-600">[반론]</span> 상대방 주장의 허점을 찾아 논리적으로 지적하기</p>
                                 <p><span class="text-rose-600">[자료정리]</span> 반대 근거가 될 실제 사례와 자료 찾기</p>
                             </div>
                         </div>
@@ -199,7 +199,7 @@
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="col-span-1 lg:col-span-1">
                         <label class="block text-sm font-black text-slate-500 mb-3 ml-1 uppercase">학생 이름</label>
-                        <input type="text" id="applyName" placeholder="이름을 입력하세요" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-4 text-lg font-bold focus:border-indigo-500 outline-none transition-all">
+                        <input type="text" id="applyName" placeholder="이름을 입력하세요." class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-4 text-lg font-bold focus:border-indigo-500 outline-none transition-all">
                     </div>
                     <div>
                         <label class="block text-sm font-black text-slate-500 mb-3 ml-1 uppercase">1지망</label>
