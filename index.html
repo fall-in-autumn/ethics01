@@ -228,7 +228,7 @@
         </div>
     </div>
 
-    <!-- Firebase Imports and Logic with robust offline resilience -->
+    <!-- Firebase Imports and Logic with robust offline resilience and correct path segments -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
@@ -247,11 +247,8 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        const rawAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-cbt-app';
-        const safeAppId = rawAppId.replace(/[^a-zA-Z0-9_-]/g, '_');
-        
-        // Use the mandatory path rules for collaborative state
-        const examDocRef = doc(db, 'artifacts', safeAppId, 'public', 'data', 'examState');
+        // Firestore document path with even number of segments (collection/document)
+        const examDocRef = doc(db, 'examSessions', 'currentSession');
 
         async function initFirebaseAndSync() {
             try {
@@ -279,7 +276,6 @@
                     if (docSnap.exists()) {
                         const data = docSnap.data();
                         if (data && data.isStarted) {
-                            // If user is waiting or on login screen and teacher started, automatically jump into the exam
                             if (window.isWaiting || !window.examStartedFlag) {
                                 window.startExamGlobal();
                             }
@@ -316,7 +312,7 @@
                 window.isWaiting = true;
             } catch (error) {
                 console.error("Google Login Error:", error);
-                window.alertBox("구글 로그인 중 오류가 발생했습니다: " + error.message, "로그인 실패");
+                window.alertBox("구글 로그인 중 오류가 발생했습니다. (승인된 도메인 설정을 확인해주세요)", "로그인 실패");
             }
         };
 
