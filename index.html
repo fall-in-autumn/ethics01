@@ -136,6 +136,45 @@
             </div>
         </section>
 
+        <!-- Teacher Monitoring Dashboard Screen -->
+        <section id="screen-teacher-dashboard" class="hidden w-full max-w-5xl bg-white rounded-2xl shadow-xl p-8 border border-slate-100 flex flex-col space-y-6">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-4">
+                <div>
+                    <span class="bg-indigo-100 text-indigo-700 text-xs px-2.5 py-1 rounded-full font-bold">교사 전용 제어 및 모니터링</span>
+                    <h2 class="text-2xl font-bold text-slate-900 mt-1">실시간 학생 응시 현황 대시보드</h2>
+                    <p class="text-sm text-slate-500">학생들이 시험을 진행하는 동안 실시간으로 접속 상태와 문제 풀이 진행도를 확인합니다.</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span id="teacher-dash-count" class="bg-indigo-600 text-white font-bold text-sm px-4 py-2 rounded-xl shadow">총 접속 학생: 0명</span>
+                </div>
+            </div>
+
+            <!-- Student Live Roster Table -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden shadow-inner max-h-[60vh] overflow-y-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-indigo-100/70 text-indigo-900 uppercase font-bold sticky top-0">
+                        <tr>
+                            <th class="p-4">학번</th>
+                            <th class="p-4">이름</th>
+                            <th class="p-4 text-center">풀은 문항 수</th>
+                            <th class="p-4 text-center">현재 상태</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacher-dashboard-roster" class="divide-y divide-slate-200 text-slate-700 bg-white">
+                        <tr>
+                            <td colspan="4" class="p-8 text-center text-slate-400">아직 접속한 학생이 없습니다.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button type="button" onclick="location.reload()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-xl text-sm transition">
+                    로그아웃 및 처음으로
+                </button>
+            </div>
+        </section>
+
         <!-- Result Screen -->
         <section id="screen-result" class="hidden w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 border border-slate-100 text-center">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-2xl font-bold mb-4 shadow-inner">🎉</div>
@@ -185,31 +224,29 @@
                 </div>
             </div>
 
-            <!-- Teacher Console Panel (Only visible for teacher) -->
-            <div id="teacher-console" class="hidden p-5 bg-indigo-50 border border-indigo-200 rounded-2xl text-left space-y-4">
+            <!-- Teacher Waiting Console Panel -->
+            <div id="teacher-waiting-console" class="hidden p-5 bg-indigo-50 border border-indigo-200 rounded-2xl text-left space-y-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-2">
-                        <span class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded font-bold">교사 전용 제어 콘솔</span>
-                        <h4 class="font-bold text-indigo-900 text-base">실시간 입장 학생 목록</h4>
+                        <span class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded font-bold">교사 대기실 제어</span>
+                        <h4 class="font-bold text-indigo-900 text-base">대기 중인 학생 목록</h4>
                     </div>
-                    <span id="student-count-badge" class="text-xs bg-indigo-200 text-indigo-800 px-2.5 py-1 rounded-full font-bold">총 0명 입장</span>
+                    <span id="waiting-student-count-badge" class="text-xs bg-indigo-200 text-indigo-800 px-2.5 py-1 rounded-full font-bold">총 0명 대기중</span>
                 </div>
-                <p class="text-xs text-indigo-700">입장한 학생들의 번호, 이름 및 각 학생이 푼 문항 수를 실시간으로 확인합니다.</p>
+                <p class="text-xs text-indigo-700">모든 학생들이 입장하면 아래 버튼을 눌러 동시 시험 시작 신호를 보내세요.</p>
                 
-                <!-- Student Live Roster Table -->
-                <div class="bg-white rounded-xl border border-indigo-200 overflow-hidden max-h-60 overflow-y-auto">
+                <div class="bg-white rounded-xl border border-indigo-200 overflow-hidden max-h-48 overflow-y-auto">
                     <table class="w-full text-left text-xs">
                         <thead class="bg-indigo-100 text-indigo-900 uppercase font-semibold">
                             <tr>
                                 <th class="p-2.5">학번</th>
                                 <th class="p-2.5">이름</th>
-                                <th class="p-2.5 text-center">풀은 문항 수</th>
                                 <th class="p-2.5 text-center">상태</th>
                             </tr>
                         </thead>
-                        <tbody id="teacher-student-roster" class="divide-y divide-indigo-100 text-slate-700">
+                        <tbody id="teacher-waiting-roster" class="divide-y divide-indigo-100 text-slate-700">
                             <tr>
-                                <td colspan="4" class="p-4 text-center text-slate-400">입장한 학생이 없습니다.</td>
+                                <td colspan="3" class="p-4 text-center text-slate-400">대기 중인 학생이 없습니다.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -314,31 +351,56 @@
 
         function listenToStudentsRoster() {
             onSnapshot(studentsColRef, (snapshot) => {
-                let rosterHtml = '';
+                let waitingRosterHtml = '';
+                let dashRosterHtml = '';
                 let count = 0;
+
                 snapshot.forEach((docSnap) => {
                     const data = docSnap.data();
                     count++;
-                    rosterHtml += `
+
+                    // Waiting room roster item
+                    waitingRosterHtml += `
                         <tr class="hover:bg-indigo-50/50 transition">
                             <td class="p-2.5 font-bold">${data.studentId}</td>
                             <td class="p-2.5 font-medium">${data.name}</td>
-                            <td class="p-2.5 text-center font-bold text-indigo-600">${data.answeredCount || 0} / 5문항</td>
                             <td class="p-2.5 text-center">
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${data.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
-                                    ${data.status === 'completed' ? '제출완료' : '응시중/대기'}
-                                </span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700">대기중</span>
                             </td>
                         </tr>
                     `;
+
+                    // Teacher live monitoring dashboard roster item (shows answered count)
+                    let statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">응시 중</span>`;
+                    if (data.status === 'completed') {
+                        statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">제출 완료</span>`;
+                    }
+
+                    dashRosterHtml += `
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="p-4 font-bold text-slate-900">${data.studentId}</td>
+                            <td class="p-4 font-semibold text-slate-800">${data.name}</td>
+                            <td class="p-4 text-center font-extrabold text-indigo-600 text-base">${data.answeredCount || 0} / 5 문항</td>
+                            <td class="p-4 text-center">${statusBadge}</td>
+                        </tr>
+                    `;
                 });
+
                 if (count === 0) {
-                    rosterHtml = `<tr><td colspan="4" class="p-4 text-center text-slate-400">입장한 학생이 없습니다.</td></tr>`;
+                    waitingRosterHtml = `<tr><td colspan="3" class="p-4 text-center text-slate-400">대기 중인 학생이 없습니다.</td></tr>`;
+                    dashRosterHtml = `<tr><td colspan="4" class="p-8 text-center text-slate-400">아직 접속한 학생이 없습니다.</td></tr>`;
                 }
-                const rosterEl = document.getElementById('teacher-student-roster');
-                if (rosterEl) rosterEl.innerHTML = rosterHtml;
-                const countBadge = document.getElementById('student-count-badge');
-                if (countBadge) countBadge.innerText = `총 ${count}명 입장`;
+
+                const waitRosterEl = document.getElementById('teacher-waiting-roster');
+                if (waitRosterEl) waitRosterEl.innerHTML = waitingRosterHtml;
+                const waitCountBadge = document.getElementById('waiting-student-count-badge');
+                if (waitCountBadge) waitCountBadge.innerText = `총 ${count}명 대기중`;
+
+                const dashRosterEl = document.getElementById('teacher-dashboard-roster');
+                if (dashRosterEl) dashRosterEl.innerHTML = dashRosterHtml;
+                const dashCountBadge = document.getElementById('teacher-dash-count');
+                if (dashCountBadge) dashCountBadge.innerText = `총 접속 학생: ${count}명`;
+
             }, (err) => {
                 console.warn("Students roster snapshot error:", err);
             });
@@ -364,21 +426,21 @@
 
                 document.getElementById('user-role-badge').innerText = "교사";
                 document.getElementById('student-wait-view').classList.add('hidden');
-                document.getElementById('teacher-console').classList.remove('hidden');
+                document.getElementById('teacher-waiting-console').classList.remove('hidden');
 
                 document.getElementById('screen-login').classList.add('hidden');
                 document.getElementById('waiting-modal').classList.remove('hidden');
                 window.isWaiting = true;
             } catch (error) {
-                console.warn("Google Login Error or Unauthorized Domain fallback:", error);
-                // Fallback for preview environments if domain is unapproved
+                console.warn("Google Login Error fallback:", error);
+                // Fallback for preview environments if popups are blocked or unconfigured
                 window.isTeacher = true;
                 window.examineeName = "관리자 교사 (수동인증)";
                 window.examineeId = "TEACHER";
 
                 document.getElementById('user-role-badge').innerText = "교사";
                 document.getElementById('student-wait-view').classList.add('hidden');
-                document.getElementById('teacher-console').classList.remove('hidden');
+                document.getElementById('teacher-waiting-console').classList.remove('hidden');
 
                 document.getElementById('screen-login').classList.add('hidden');
                 document.getElementById('waiting-modal').classList.remove('hidden');
@@ -395,7 +457,7 @@
             document.getElementById('wait-id').innerText = studentId;
 
             document.getElementById('student-wait-view').classList.remove('hidden');
-            document.getElementById('teacher-console').classList.add('hidden');
+            document.getElementById('teacher-waiting-console').classList.add('hidden');
 
             document.getElementById('screen-login').classList.add('hidden');
             document.getElementById('waiting-modal').classList.remove('hidden');
@@ -437,6 +499,13 @@
             window.isWaiting = false;
 
             document.getElementById('waiting-modal').classList.add('hidden');
+
+            // If user is teacher, do not take the exam. Instead, show the dedicated teacher live dashboard!
+            if (window.isTeacher) {
+                document.getElementById('screen-teacher-dashboard').classList.remove('hidden');
+                return;
+            }
+
             const cdModal = document.getElementById('countdown-modal');
             const cdNumber = document.getElementById('countdown-number');
             cdModal.classList.remove('hidden');
@@ -459,7 +528,6 @@
         }
     </script>
 
-    <!-- Question Bank & CBT Interactive Engine -->
     <script>
         const questions = [
             {
@@ -545,12 +613,6 @@
         }
 
         window.startExamGlobal = function() {
-            if (window.isTeacher) {
-                alert("교사 계정입니다. 대기실에서 학생들의 응시 현황을 모니터링 중입니다.");
-                location.reload();
-                return;
-            }
-
             screenLogin.classList.add('hidden');
             screenExam.classList.remove('hidden');
             userInfoHeader.classList.remove('hidden');
