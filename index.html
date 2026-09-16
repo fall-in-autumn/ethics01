@@ -249,7 +249,9 @@
 
         const rawAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-cbt-app';
         const safeAppId = rawAppId.replace(/[^a-zA-Z0-9_-]/g, '_');
-        const examDocRef = doc(db, 'artifacts', safeAppId, 'states', 'examState');
+        
+        // Use the mandatory path rules for collaborative state
+        const examDocRef = doc(db, 'artifacts', safeAppId, 'public', 'data', 'examState');
 
         async function initFirebaseAndSync() {
             try {
@@ -272,11 +274,15 @@
                     console.warn("Firestore offline warning (running in local sync mode):", offlineErr);
                 }
 
+                // Real-time listener: triggers whenever the teacher updates isStarted to true
                 onSnapshot(examDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
-                        if (data && data.isStarted && window.isWaiting) {
-                            window.startExamGlobal();
+                        if (data && data.isStarted) {
+                            // If user is waiting or on login screen and teacher started, automatically jump into the exam
+                            if (window.isWaiting || !window.examStartedFlag) {
+                                window.startExamGlobal();
+                            }
                         }
                     }
                 }, (err) => {
@@ -398,6 +404,7 @@
         window.examineeId = "";
         window.isTeacher = false;
         window.isWaiting = false;
+        window.examStartedFlag = false;
 
         // DOM Elements
         const screenLogin = document.getElementById('screen-login');
@@ -482,13 +489,15 @@
         window.teacherStartExam = teacherStartExam;
 
         window.startExamGlobal = function() {
-            if (!screenExam.classList.contains('hidden')) return; // already started
+            if (window.examStartedFlag) return; // already started
+            window.examStartedFlag = true;
             window.isWaiting = false;
+            screenLogin.classList.add('hidden');
             screenWaiting.classList.add('hidden');
             screenExam.classList.remove('hidden');
             userInfoHeader.classList.remove('hidden');
             timerBox.classList.remove('hidden');
-            examineeNameSpan.innerText = window.examineeName;
+            examineeNameSpan.innerText = window.examineeName || "응시생";
 
             userAnswers = {};
             markedQuestions = {};
