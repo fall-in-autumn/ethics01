@@ -194,7 +194,7 @@
                     <h4 class="font-bold text-indigo-900 text-sm">평가용 교사 제어 콘솔</h4>
                 </div>
                 <p class="text-xs text-indigo-700 mb-4">버튼을 누르면 대기실에 있는 모든 학생들의 화면이 동시에 시험 화면으로 전환됩니다.</p>
-                <button type="button" onclick="teacherStartExam()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition text-sm flex items-center justify-center space-x-2">
+                <button type="button" onclick="teacherStartGame()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition text-sm flex items-center justify-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span>교사 권한 동시 시험 시작하기</span>
                 </button>
@@ -243,7 +243,11 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        const examDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'examSessions', 'currentSession');
+        // Firestore gamestate document reference
+        const gameStateRef = doc(db, 'artifacts', appId, 'public', 'data', 'control', 'gamestate');
+
+        window.examStartedFlag = false;
+        window.isWaiting = false;
 
         async function initFirebaseAndSync() {
             try {
@@ -254,32 +258,45 @@
                 }
 
                 try {
-                    const snap = await getDoc(examDocRef);
+                    const snap = await getDoc(gameStateRef);
                     if (!snap.exists()) {
-                        await setDoc(examDocRef, { isStarted: false, timestamp: Date.now() });
+                        await setDoc(gameStateRef, { status: 'waiting', timestamp: Date.now() });
                     }
                 } catch (offlineErr) {
                     console.warn("Offline warning:", offlineErr);
                 }
 
-                // Real-time listener for exam start state
-                onSnapshot(examDocRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        if (data && data.isStarted) {
-                            if (window.isWaiting && !window.examStartedFlag) {
-                                triggerCountdownAndStart();
-                            }
-                        }
-                    }
-                }, (err) => {
-                    console.warn("Snapshot error:", err);
-                });
+                // Listen to gamestate changes in real-time
+                listenToGameState();
             } catch (err) {
                 console.warn("Firebase init warning:", err);
             }
         }
         initFirebaseAndSync();
+
+        function listenToGameState() {
+            onSnapshot(gameStateRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data && data.status === 'started') {
+                        if (window.isWaiting && !window.examStartedFlag) {
+                            triggerCountdownAndStart();
+                        }
+                    }
+                }
+            }, (err) => {
+                console.warn("GameState snapshot error:", err);
+            });
+        }
+
+        window.teacherStartGame = async function() {
+            try {
+                await setDoc(gameStateRef, { status: 'started', timestamp: Date.now() });
+            } catch (err) {
+                console.warn("Offline teacher start simulated:", err);
+            }
+            triggerCountdownAndStart();
+        };
 
         window.loginAsTeacherWithGoogle = async function() {
             try {
@@ -308,15 +325,6 @@
             document.getElementById('waiting-modal').classList.remove('hidden');
             window.isWaiting = true;
         }
-
-        window.teacherStartExam = async function() {
-            try {
-                await setDoc(examDocRef, { isStarted: true, timestamp: Date.now() });
-            } catch (err) {
-                console.warn("Offline teacher start simulated:", err);
-            }
-            triggerCountdownAndStart();
-        };
 
         function triggerCountdownAndStart() {
             if (window.examStartedFlag) return;
@@ -415,8 +423,6 @@
         let markedQuestions = {};
         let timerInterval = null;
         let timeLeft = 40 * 60;
-        window.examStartedFlag = false;
-        window.isWaiting = false;
 
         const screenLogin = document.getElementById('screen-login');
         const waitingModal = document.getElementById('waiting-modal');
