@@ -52,7 +52,6 @@
 
     <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
 
-        <!-- 1. 로그인 화면 -->
         <section id="screen-login" class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
             <div class="text-center mb-6">
                 <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-2xl mx-auto flex items-center justify-center text-2xl font-bold mb-3 shadow-inner">🎯</div>
@@ -85,9 +84,8 @@
             </div>
         </section>
 
-        <!-- 2. 실제 시험 화면 (기본 비활성) -->
-        <section id="screen-exam" class="hidden w-full max-w-5xl bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col md:flex-row">
-            <!-- Left: Question Panel -->
+        <section id="screen-exam" class="hidden w-full max-w-6xl bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col md:flex-row items-stretch">
+            <!-- Left: Question Panel (Flexible height, scrollable content) -->
             <div class="flex-grow p-6 sm:p-8 border-b md:border-b-0 md:border-r border-slate-100 flex flex-col justify-between">
                 <div>
                     <div class="flex justify-between items-center mb-6">
@@ -114,8 +112,8 @@
                 </div>
             </div>
 
-            <!-- Right: OMR Palette -->
-            <div class="w-full md:w-80 p-6 bg-slate-50 flex flex-col justify-between">
+            <!-- Right: Fixed OMR Banner / Sidebar (Independent of question content size) -->
+            <div class="w-full md:w-80 p-6 bg-slate-50 flex flex-col justify-between shrink-0">
                 <div>
                     <h3 class="font-bold text-sm text-slate-700 mb-3 flex items-center justify-between">
                         <span>OMR 답안 및 문항 팔레트</span>
@@ -140,7 +138,6 @@
             </div>
         </section>
 
-        <!-- 3. 결과 리포트 화면 -->
         <section id="screen-result" class="hidden w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 border border-slate-100 text-center">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-2xl font-bold mb-4 shadow-inner">🎉</div>
             <h2 class="text-2xl font-bold text-slate-900 mb-1">수행평가 제출 완료</h2>
@@ -163,7 +160,6 @@
         </section>
     </main>
 
-    <!-- 대기실 모달 -->
     <div id="waiting-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center space-y-6 border border-slate-100">
             <div class="w-20 h-20 bg-amber-100 text-amber-600 rounded-full mx-auto flex items-center justify-center text-3xl mb-2 animate-bounce shadow-inner">⏳</div>
@@ -187,14 +183,13 @@
                 </div>
             </div>
 
-            <!-- 교사 제어 콘솔 (교사 로그인 시에만 노출) -->
             <div id="teacher-console" class="hidden p-5 bg-indigo-50 border border-indigo-200 rounded-2xl text-left">
                 <div class="flex items-center space-x-2 mb-2">
                     <span class="bg-indigo-600 text-white text-xs px-2 py-0.5 rounded font-bold">교사 전용</span>
                     <h4 class="font-bold text-indigo-900 text-sm">평가용 교사 제어 콘솔</h4>
                 </div>
                 <p class="text-xs text-indigo-700 mb-4">버튼을 누르면 대기실에 있는 모든 학생들의 화면이 동시에 시험 화면으로 전환됩니다.</p>
-                <button type="button" onclick="teacherStartExam()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition text-sm flex items-center justify-center space-x-2">
+                <button type="button" onclick="teacherStartGame()" class="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition text-sm flex items-center justify-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span>교사 권한 동시 시험 시작하기</span>
                 </button>
@@ -202,7 +197,6 @@
         </div>
     </div>
 
-    <!-- 카운트다운 모달 -->
     <div id="countdown-modal" class="hidden fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center space-y-4">
             <div class="text-sm font-bold text-indigo-600 uppercase tracking-widest">시험 시작 알림</div>
@@ -211,7 +205,6 @@
         </div>
     </div>
 
-    <!-- 제출 확인 모달 -->
     <div id="submit-modal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center space-y-4">
             <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full mx-auto flex items-center justify-center text-xl font-bold">⚠️</div>
@@ -243,7 +236,10 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        const examDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'examSessions', 'currentSession');
+        const gameStateRef = doc(db, 'artifacts', appId, 'public', 'data', 'control', 'gamestate');
+
+        window.examStartedFlag = false;
+        window.isWaiting = false;
 
         async function initFirebaseAndSync() {
             try {
@@ -254,32 +250,44 @@
                 }
 
                 try {
-                    const snap = await getDoc(examDocRef);
+                    const snap = await getDoc(gameStateRef);
                     if (!snap.exists()) {
-                        await setDoc(examDocRef, { isStarted: false, timestamp: Date.now() });
+                        await setDoc(gameStateRef, { status: 'waiting', timestamp: Date.now() });
                     }
                 } catch (offlineErr) {
                     console.warn("Offline warning:", offlineErr);
                 }
 
-                // Real-time listener for exam start state
-                onSnapshot(examDocRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        if (data && data.isStarted) {
-                            if (window.isWaiting && !window.examStartedFlag) {
-                                triggerCountdownAndStart();
-                            }
-                        }
-                    }
-                }, (err) => {
-                    console.warn("Snapshot error:", err);
-                });
+                listenToGameState();
             } catch (err) {
                 console.warn("Firebase init warning:", err);
             }
         }
         initFirebaseAndSync();
+
+        function listenToGameState() {
+            onSnapshot(gameStateRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data && data.status === 'started') {
+                        if (window.isWaiting && !window.examStartedFlag) {
+                            triggerCountdownAndStart();
+                        }
+                    }
+                }
+            }, (err) => {
+                console.warn("GameState snapshot error:", err);
+            });
+        }
+
+        window.teacherStartGame = async function() {
+            try {
+                await setDoc(gameStateRef, { status: 'started', timestamp: Date.now() });
+            } catch (err) {
+                console.warn("Offline teacher start simulated:", err);
+            }
+            triggerCountdownAndStart();
+        };
 
         window.loginAsTeacherWithGoogle = async function() {
             try {
@@ -308,15 +316,6 @@
             document.getElementById('waiting-modal').classList.remove('hidden');
             window.isWaiting = true;
         }
-
-        window.teacherStartExam = async function() {
-            try {
-                await setDoc(examDocRef, { isStarted: true, timestamp: Date.now() });
-            } catch (err) {
-                console.warn("Offline teacher start simulated:", err);
-            }
-            triggerCountdownAndStart();
-        };
 
         function triggerCountdownAndStart() {
             if (window.examStartedFlag) return;
@@ -415,8 +414,6 @@
         let markedQuestions = {};
         let timerInterval = null;
         let timeLeft = 40 * 60;
-        window.examStartedFlag = false;
-        window.isWaiting = false;
 
         const screenLogin = document.getElementById('screen-login');
         const waitingModal = document.getElementById('waiting-modal');
