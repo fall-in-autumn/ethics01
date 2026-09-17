@@ -197,16 +197,12 @@
         </section>
 
         <!-- Result Screen -->
-        <section id="screen-result" class="hidden w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 border border-slate-100 text-center">
-            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-2xl font-bold mb-4 shadow-inner">🎉</div>
-            <h2 class="text-2xl font-bold text-slate-900 mb-1">수행평가 제출 완료</h2>
-            <p class="text-sm text-slate-500 mb-6">고생하셨습니다! 제출이 성공적으로 완료되었습니다.</p>
-            
-            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 mb-6 text-left space-y-4">
-                <h3 class="font-bold text-sm text-slate-700">내가 제출한 답안 확인</h3>
-                <div id="result-breakdown" class="space-y-3 max-h-72 overflow-y-auto pr-2"></div>
+        <section id="screen-result" class="hidden w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-slate-100 text-center space-y-6">
+            <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-3xl font-bold shadow-inner">🎉</div>
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">시험 최종 제출 완료</h2>
+                <p class="text-sm text-slate-500">고생하셨습니다! 제출이 성공적으로 완료되었습니다.</p>
             </div>
-
             <button type="button" onclick="location.reload()" class="w-full py-3.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl shadow transition text-sm">
                 처음으로 돌아가기
             </button>
@@ -882,27 +878,6 @@
             clearInterval(timerInterval);
             closeSubmitModal();
 
-            let breakdownHtml = '';
-
-            questions.forEach((q, idx) => {
-                const ans = userAnswers[idx];
-                let displayAns = "미작성";
-                if (ans !== undefined && ans !== '') {
-                    if (typeof ans === 'object') {
-                        displayAns = JSON.stringify(ans);
-                    } else {
-                        displayAns = String(ans);
-                    }
-                }
-
-                breakdownHtml += `
-                    <div class="p-3 bg-white rounded-xl border border-slate-200 space-y-1 text-xs">
-                        <div class="font-bold text-slate-800">${q.badge}</div>
-                        <div class="text-slate-600 bg-slate-50 p-2 rounded border border-slate-100">내 답안: ${displayAns}</div>
-                    </div>
-                `;
-            });
-
             updateStudentProgressInFirestore(calculateAnsweredCount(), 'completed');
 
             // Send answers to Google Sheets via Apps Script Web App
@@ -917,8 +892,6 @@
                     answers: userAnswers
                 })
             }).catch(err => console.warn("Google Sheet sync error:", err));
-
-            document.getElementById('result-breakdown').innerHTML = breakdownHtml;
 
             screenExam.classList.add('hidden');
             timerBox.classList.add('hidden');
