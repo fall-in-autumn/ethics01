@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>가상공간 프로젝트 도덕 수행평가</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -83,7 +82,6 @@
 
         <!-- Exam Screen with Fixed Right OMR Panel -->
         <section id="screen-exam" class="hidden w-full max-w-6xl bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col md:flex-row items-stretch">
-            <!-- Left: Question Panel (Flexible height, scrollable content) -->
             <div class="flex-grow p-6 sm:p-8 border-b md:border-b-0 md:border-r border-slate-100 flex flex-col justify-between">
                 <div>
                     <div class="flex justify-between items-center mb-6">
@@ -110,7 +108,6 @@
                 </div>
             </div>
 
-            <!-- Right: Fixed OMR Banner / Sidebar with explicit fixed width so it never changes size regardless of question content -->
             <div class="w-full md:w-80 p-6 bg-slate-50 flex flex-col justify-between shrink-0">
                 <div>
                     <h3 class="font-bold text-sm text-slate-700 mb-3 flex items-center justify-between">
@@ -141,31 +138,55 @@
             <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                 <div>
                     <span class="bg-indigo-100 text-indigo-700 text-xs px-2.5 py-1 rounded-full font-bold">교사 전용 제어 및 모니터링</span>
-                    <h2 class="text-2xl font-bold text-slate-900 mt-1">실시간 학생 응시 현황 대시보드</h2>
-                    <p class="text-sm text-slate-500">학생들이 시험을 진행하는 동안 실시간으로 접속 상태와 문제 풀이 진행도를 확인합니다.</p>
+                    <h2 class="text-2xl font-bold text-slate-900 mt-1">실시간 학생 응시 현황 및 문항 보기 대시보드</h2>
+                    <p class="text-sm text-slate-500">학생들의 실시간 응시 현황과 출제된 문항들을 한 화면에서 동시에 확인하실 수 있습니다.</p>
                 </div>
                 <div class="flex items-center space-x-3">
                     <span id="teacher-dash-count" class="bg-indigo-600 text-white font-bold text-sm px-4 py-2 rounded-xl shadow">총 접속 학생: 0명</span>
                 </div>
             </div>
 
-            <!-- Student Live Roster Table -->
-            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden shadow-inner max-h-[60vh] overflow-y-auto">
-                <table class="w-full text-left text-sm">
-                    <thead class="bg-indigo-100/70 text-indigo-900 uppercase font-bold sticky top-0">
-                        <tr>
-                            <th class="p-4">학번</th>
-                            <th class="p-4">이름</th>
-                            <th class="p-4 text-center">풀은 문항 수</th>
-                            <th class="p-4 text-center">현재 상태</th>
-                        </tr>
-                    </thead>
-                    <tbody id="teacher-dashboard-roster" class="divide-y divide-slate-200 text-slate-700 bg-white">
-                        <tr>
-                            <td colspan="4" class="p-8 text-center text-slate-400">아직 접속한 학생이 없습니다.</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Student Monitoring Section -->
+            <div class="space-y-3">
+                <h3 class="font-bold text-sm text-slate-700 flex items-center space-x-2">
+                    <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <span>실시간 학생 응시 현황 리포트</span>
+                </h3>
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden shadow-inner max-h-56 overflow-y-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-indigo-100/70 text-indigo-900 uppercase font-bold sticky top-0">
+                            <tr>
+                                <th class="p-3.5">학번</th>
+                                <th class="p-3.5">이름</th>
+                                <th class="p-3.5 text-center">풀은 문항 수</th>
+                                <th class="p-3.5 text-center">현재 상태</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacher-dashboard-roster" class="divide-y divide-slate-200 text-slate-700 bg-white">
+                            <tr>
+                                <td colspan="4" class="p-6 text-center text-slate-400">아직 접속한 학생이 없습니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Teacher Question Review Card Section -->
+            <div class="space-y-3 pt-2">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-sm text-slate-700 flex items-center space-x-2">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span>출제 문항 미리보기 및 검토 카드</span>
+                    </h3>
+                    <div class="flex space-x-1.5" id="teacher-q-pills">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+                <div class="bg-slate-50 rounded-2xl border border-slate-200 p-5 shadow-inner">
+                    <div id="teacher-question-preview-content" class="space-y-4">
+                        <!-- Loaded question preview -->
+                    </div>
+                </div>
             </div>
 
             <div class="flex justify-end pt-2">
@@ -359,7 +380,6 @@
                     const data = docSnap.data();
                     count++;
 
-                    // Waiting room roster item
                     waitingRosterHtml += `
                         <tr class="hover:bg-indigo-50/50 transition">
                             <td class="p-2.5 font-bold">${data.studentId}</td>
@@ -370,7 +390,6 @@
                         </tr>
                     `;
 
-                    // Teacher live monitoring dashboard roster item (shows answered count)
                     let statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700">응시 중</span>`;
                     if (data.status === 'completed') {
                         statusBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">제출 완료</span>`;
@@ -433,7 +452,6 @@
                 window.isWaiting = true;
             } catch (error) {
                 console.warn("Google Login Error fallback:", error);
-                // Fallback for preview environments if popups are blocked or unconfigured
                 window.isTeacher = true;
                 window.examineeName = "관리자 교사 (수동인증)";
                 window.examineeId = "TEACHER";
@@ -500,9 +518,9 @@
 
             document.getElementById('waiting-modal').classList.add('hidden');
 
-            // If user is teacher, do not take the exam. Instead, show the dedicated teacher live dashboard!
             if (window.isTeacher) {
                 document.getElementById('screen-teacher-dashboard').classList.remove('hidden');
+                renderTeacherQuestionPreview(0);
                 return;
             }
 
@@ -539,9 +557,9 @@
                     A: 어제 학교 오픈 채팅방 봤어? 옆 반 C 웃긴 사진 올라왔잖아.<br>
                     B: 응. 봤어. 그래서 그런가 쉬는 시간에 보니까 C가 울고 있더라고.<br>
                     A: 그런 것 가지고 찌질하긴. 그거 사실 내가 올렸음. 어차피 익명이라 아무도 모를 거야.<br>
-                    B: 네가? A야. 네 행동으로 C 기분이 어떻겠어? 불쾌하겠지? 이건 <span class="drop-zone" id="blank-A" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropItem(event, 'A')" onclick="clearBlank('A')">( A )</span>이라는 도덕적 문제로 볼 수 있어.<br>
+                    B: 네가? A야. 네 행동으로 C 기분이 어떻겠어? 불쾌하겠지? 이건 <span class="drop-zone" id="blank-1-A" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropItem(event, 1, 'A')" onclick="clearBlank(1, 'A')">( A )</span>이라는 도덕적 문제로 볼 수 있어.<br>
                     A: 어째서? 나는 그냥 장난으로 올린 것뿐이야. 그냥 사진 하나 올렸을 뿐인데?<br>
-                    B: 다른 사람 사진을 허락 없이 올리는 것도 <span class="drop-zone" id="blank-B" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropItem(event, 'B')" onclick="clearBlank('B')">( B )</span>이라고 해. 그러니 얼른 가서 C에게 사과해.
+                    B: 다른 사람 사진을 허락 없이 올리는 것도 <span class="drop-zone" id="blank-1-B" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropItem(event, 1, 'B')" onclick="clearBlank(1, 'B')">( B )</span>이라고 해. 그러니 얼른 가서 C에게 사과해.
                 `,
                 options: [
                     "사이버 폭력", "사생활 침해", "거짓 정보", "정보의 편향성", 
@@ -551,16 +569,20 @@
             },
             {
                 id: 2,
-                type: 'choice',
+                type: 'drag-blank',
                 badge: '문항 2 (배점: 20점)',
-                text: '사이버 공간에서 발생하는 익명성의 역기능으로 가장 거리가 먼 것은?',
+                text: '다음 대화에서 드러나는 가상공간의 도덕적 문제를 빈칸에 알맞은 말을 드래그하여 완성하시오.',
+                conversation: `
+                    학생: 제가 조사한 우리 동네 사회적 문제를 주제로 한 과제 발표는 여기까지입니다. 들어주셔서 감사합니다.<br>
+                    교수: 고생했습니다. 발표에 사용된 사진과 영상의 출처는 어디 있나요?<br>
+                    학생: 아, 그건 제가 준비를 못 했습니다. 그냥 써도 된다고 생각해서…<br>
+                    교수: 우리가 다른 사람의 창작물을 허락 없이 사용해도 된다고 생각하기 쉽지만, 이는 <span class="drop-zone" id="blank-2-A" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropItem(event, 2, 'A')" onclick="clearBlank(2, 'A')">( A )</span>이라는 문제가 됩니다.
+                `,
                 options: [
-                    "타인에 대한 무책임한 비방과 악성댓글 증가",
-                    "개인정보 유출 및 명예훼손 피해 발생",
-                    "시공간의 제약을 받지 않고 의견을 자유롭게 교환",
-                    "책임감 결여로 인한 도덕적 해이 심화"
+                    "지식 재산권 침해", "사이버 폭력", "초상권 침해", "정보 격차", 
+                    "허위 정보 유포", "사생활 침해", "무단 복제", "명예 훼손"
                 ],
-                answer: 2
+                answer: { A: "지식 재산권 침해" }
             },
             {
                 id: 3,
@@ -703,13 +725,20 @@
 
             if (q.type === 'drag-blank' && userAnswers[currentIndex]) {
                 const ans = userAnswers[currentIndex];
-                if (ans.A) {
-                    const elA = document.getElementById('blank-A');
-                    if (elA) elA.innerHTML = `${ans.A} <span class="text-xs text-rose-500 ml-1">×</span>`;
-                }
-                if (ans.B) {
-                    const elB = document.getElementById('blank-B');
-                    if (elB) elB.innerHTML = `${ans.B} <span class="text-xs text-rose-500 ml-1">×</span>`;
+                if (q.id === 1) {
+                    if (ans.A) {
+                        const elA = document.getElementById('blank-1-A');
+                        if (elA) elA.innerHTML = `${ans.A} <span class="text-xs text-rose-500 ml-1">×</span>`;
+                    }
+                    if (ans.B) {
+                        const elB = document.getElementById('blank-1-B');
+                        if (elB) elB.innerHTML = `${ans.B} <span class="text-xs text-rose-500 ml-1">×</span>`;
+                    }
+                } else if (q.id === 2) {
+                    if (ans.A) {
+                        const elA = document.getElementById('blank-2-A');
+                        if (elA) elA.innerHTML = `${ans.A} <span class="text-xs text-rose-500 ml-1">×</span>`;
+                    }
                 }
             }
 
@@ -738,7 +767,7 @@
         function removeDropStyle(e) {
             e.currentTarget.classList.remove('drag-over');
         }
-        function dropItem(e, slotId) {
+        function dropItem(e, qId, slotId) {
             e.preventDefault();
             e.currentTarget.classList.remove('drag-over');
             const val = e.dataTransfer.getData('text/plain') || draggedValue;
@@ -756,23 +785,28 @@
             if (q.type !== 'drag-blank') return;
             if (!userAnswers[currentIndex]) userAnswers[currentIndex] = {};
             
-            if (!userAnswers[currentIndex].A) {
+            if (q.id === 1) {
+                if (!userAnswers[currentIndex].A) {
+                    userAnswers[currentIndex].A = val;
+                    document.getElementById('blank-1-A').innerHTML = `${val} <span class="text-xs text-rose-500 ml-1">×</span>`;
+                } else if (!userAnswers[currentIndex].B) {
+                    userAnswers[currentIndex].B = val;
+                    document.getElementById('blank-1-B').innerHTML = `${val} <span class="text-xs text-rose-500 ml-1">×</span>`;
+                } else {
+                    userAnswers[currentIndex].A = val;
+                    document.getElementById('blank-1-A').innerHTML = `${val} <span class="text-xs text-rose-500 ml-1">×</span>`;
+                }
+            } else if (q.id === 2) {
                 userAnswers[currentIndex].A = val;
-                document.getElementById('blank-A').innerHTML = `${val} <span class="text-xs text-rose-500 ml-1">×</span>`;
-            } else if (!userAnswers[currentIndex].B) {
-                userAnswers[currentIndex].B = val;
-                document.getElementById('blank-B').innerHTML = `${val} <span class="text-xs text-rose-500 ml-1">×</span>`;
-            } else {
-                userAnswers[currentIndex].A = val;
-                document.getElementById('blank-A').innerHTML = `${val} <span class="text-xs text-rose-500 ml-1">×</span>`;
+                document.getElementById('blank-2-A').innerHTML = `${val} <span class="text-xs text-rose-500 ml-1">×</span>`;
             }
             updateStudentProgressInFirestore(calculateAnsweredCount());
             renderOmrPalette();
         }
-        function clearBlank(slotId) {
+        function clearBlank(qId, slotId) {
             if (userAnswers[currentIndex] && userAnswers[currentIndex][slotId]) {
                 delete userAnswers[currentIndex][slotId];
-                document.getElementById(`blank-${slotId}`).innerHTML = `( ${slotId} )`;
+                document.getElementById(`blank-${qId}-${slotId}`).innerHTML = `( ${slotId} )`;
                 updateStudentProgressInFirestore(calculateAnsweredCount());
                 renderOmrPalette();
             }
@@ -849,7 +883,8 @@
                 const ans = userAnswers[idx];
 
                 if (q.type === 'drag-blank') {
-                    if (ans && ans.A === q.answer.A && ans.B === q.answer.B) isCorrect = true;
+                    if (q.id === 1 && ans && ans.A === q.answer.A && ans.B === q.answer.B) isCorrect = true;
+                    if (q.id === 2 && ans && ans.A === q.answer.A) isCorrect = true;
                 } else if (q.type === 'choice') {
                     if (ans === q.answer) isCorrect = true;
                 } else if (q.type === 'subjective') {
@@ -876,6 +911,44 @@
             timerBox.classList.add('hidden');
             screenResult.classList.remove('hidden');
         }
+
+        // Teacher Question Preview Helpers
+        window.renderTeacherQuestionPreview = function(qIdx) {
+            const q = questions[qIdx];
+            
+            // Render pills
+            let pillsHtml = '';
+            questions.forEach((item, idx) => {
+                const isActive = idx === qIdx;
+                pillsHtml += `<button type="button" onclick="renderTeacherQuestionPreview(${idx})" class="px-3 py-1 rounded-lg text-xs font-bold transition ${isActive ? 'bg-indigo-600 text-white shadow' : 'bg-slate-200 hover:bg-slate-300 text-slate-700'}">문항 ${idx+1}</button>`;
+            });
+            document.getElementById('teacher-q-pills').innerHTML = pillsHtml;
+
+            // Render content
+            let html = `
+                <div class="flex justify-between items-center">
+                    <span class="bg-indigo-100 text-indigo-700 font-bold px-2.5 py-0.5 rounded text-xs">${q.badge}</span>
+                    <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">정답 정보 포함</span>
+                </div>
+                <h4 class="font-bold text-slate-900 text-sm sm:text-base">${q.text}</h4>
+            `;
+
+            if (q.type === 'drag-blank') {
+                html += `<div class="bg-white p-4 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">${q.conversation}</div>`;
+                html += `<div class="text-xs text-indigo-800 font-semibold bg-indigo-50/80 p-3 rounded-xl border border-indigo-100">정답 키: ${JSON.stringify(q.answer)}</div>`;
+            } else if (q.type === 'choice') {
+                html += `<div class="space-y-2">`;
+                q.options.forEach((opt, optIdx) => {
+                    const isAns = optIdx === q.answer;
+                    html += `<div class="p-3 rounded-xl border text-xs sm:text-sm ${isAns ? 'border-emerald-500 bg-emerald-50 font-bold text-emerald-900' : 'border-slate-200 bg-white text-slate-700'}">${optIdx + 1}. ${opt} ${isAns ? ' (정답)' : ''}</div>`;
+                });
+                html += `</div>`;
+            } else if (q.type === 'subjective') {
+                html += `<div class="text-xs text-indigo-800 font-semibold bg-indigo-50/80 p-3 rounded-xl border border-indigo-100">핵심 채점 키워드: ${q.answerKeyWords.join(', ')}</div>`;
+            }
+
+            document.getElementById('teacher-question-preview-content').innerHTML = html;
+        };
     </script>
 </body>
 </html>
