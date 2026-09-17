@@ -586,24 +586,22 @@
             },
             {
                 id: 3,
-                type: 'choice',
+                type: 'subjective',
                 badge: '문항 3 (배점: 20점)',
-                text: '온라인상에서 타인의 저작물을 허락 없이 무단 복제하여 배포하는 행위와 가장 관련 깊은 도덕적 개념은?',
-                options: ["초상권 침해", "지식 재산권 침해", "사이버 불링", "정보 편향성"],
-                answer: 1
+                text: '다음 글에서 드러나는 가상공간의 도덕적 문제의 원인을 설명하시오.',
+                passage: `“나는 온라인 게임을 즐겨 한다. 그런데 채팅 창에 온갖 욕설과 비방이 넘쳐 나서 불쾌할 때가 있다. 오늘도 게임하다가 상대방에게 입에 담지 못한 욕설을 들었다. 게임에서 지고 있을 때는 같은 팀원끼리 서로를 비난하기도 한다.”`,
+                guideline: '※ 조건: 제시된 글에서 드러나는 도덕적 문제의 원인을 \'~입니다. 왜냐하면 ~이기 때문입니다.\' 형식에 맞춰 작성하시오.',
+                answerKeyWords: ["익명성", "비대면성", "책임", "욕설", "비방"]
             },
             {
                 id: 4,
-                type: 'choice',
+                type: 'subjective',
                 badge: '문항 4 (배점: 20점)',
-                text: '가상현실(VR) 및 메타버스 공간에서 아바타를 이용해 타인에게 언어적 폭력을 가하는 행위에 대한 올바른 대처 태도로 적절한 것은?',
-                options: [
-                    "가상이므로 실제 피해가 없으므로 무시한다.",
-                    "나도 똑같이 아바타로 보복한다.",
-                    "캡처 및 신고 기능을 활용하여 적극적으로 제재를 요구한다.",
-                    "내가 가입한 커뮤니티에 상대방 신상을 공개한다."
-                ],
-                answer: 2
+                text: '다음 그림은 학생 김지사의 휴대폰 화면이다. 김지사에게 할 수 있는 조언은 무엇인가?',
+                hasImage: true,
+                imagePath: './images/문항4.png',
+                guideline: '※ 서술 조건:<br>1) 다음 그림에서 드러나는 가상공간의 도덕적 문제가 무엇인지 설명할 것<br>2) 구체적인 행동을 조언할 것 (예: ~ 해야 한다.)',
+                answerKeyWords: ["문제", "조언", "해야 한다"]
             },
             {
                 id: 5,
@@ -697,6 +695,14 @@
             const container = document.getElementById('question-container');
             let html = `<h2 class="text-base sm:text-lg font-bold text-slate-900 leading-snug">${q.text}</h2>`;
 
+            if (q.hasImage) {
+                html += `
+                    <div class="my-3 w-full max-w-xl mx-auto rounded-xl border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center" style="aspect-ratio: 1408 / 768;">
+                        <img src="${q.imagePath}" alt="문항 4 이미지" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/1408x768/f1f5f9/64748b?text=문항4+이미지+준비중';">
+                    </div>
+                `;
+            }
+
             if (q.type === 'drag-blank') {
                 html += `<div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 text-sm leading-relaxed text-slate-700 space-y-2">${q.conversation}</div>`;
                 html += `<div><p class="text-xs font-bold text-slate-500 uppercase mb-3">보기 항목 (드래그하여 빈칸에 놓거나 클릭)</p><div class="flex flex-wrap gap-2">`;
@@ -717,8 +723,14 @@
                 });
                 html += `</div>`;
             } else if (q.type === 'subjective') {
+                if (q.passage) {
+                    html += `<div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm text-slate-700 italic">${q.passage}</div>`;
+                }
+                if (q.guideline) {
+                    html += `<div class="text-xs font-medium text-indigo-700 bg-indigo-50 p-3 rounded-lg border border-indigo-100">${q.guideline}</div>`;
+                }
                 const currentVal = userAnswers[currentIndex] || '';
-                html += `<textarea oninput="saveSubjective(this.value)" rows="4" placeholder="여기에 답변을 입력하세요..." class="w-full p-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm bg-slate-50">${currentVal}</textarea>`;
+                html += `<textarea oninput="saveSubjective(this.value)" rows="4" placeholder="답안을 입력하세요." class="w-full p-4 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none text-sm bg-slate-50">${currentVal}</textarea>`;
             }
 
             container.innerHTML = html;
@@ -916,7 +928,6 @@
         window.renderTeacherQuestionPreview = function(qIdx) {
             const q = questions[qIdx];
             
-            // Render pills
             let pillsHtml = '';
             questions.forEach((item, idx) => {
                 const isActive = idx === qIdx;
@@ -924,7 +935,6 @@
             });
             document.getElementById('teacher-q-pills').innerHTML = pillsHtml;
 
-            // Render content
             let html = `
                 <div class="flex justify-between items-center">
                     <span class="bg-indigo-100 text-indigo-700 font-bold px-2.5 py-0.5 rounded text-xs">${q.badge}</span>
@@ -932,6 +942,14 @@
                 </div>
                 <h4 class="font-bold text-slate-900 text-sm sm:text-base">${q.text}</h4>
             `;
+
+            if (q.hasImage) {
+                html += `
+                    <div class="my-2 w-full max-w-sm rounded-lg border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center" style="aspect-ratio: 1408 / 768;">
+                        <img src="${q.imagePath}" alt="문항 이미지" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/1408x768/f1f5f9/64748b?text=이미지';">
+                    </div>
+                `;
+            }
 
             if (q.type === 'drag-blank') {
                 html += `<div class="bg-white p-4 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">${q.conversation}</div>`;
@@ -944,6 +962,12 @@
                 });
                 html += `</div>`;
             } else if (q.type === 'subjective') {
+                if (q.passage) {
+                    html += `<div class="bg-white p-3 rounded-xl border border-slate-200 text-xs text-slate-700 italic">${q.passage}</div>`;
+                }
+                if (q.guideline) {
+                    html += `<div class="text-xs text-indigo-800 font-semibold bg-indigo-50/80 p-2 rounded-lg border border-indigo-100">${q.guideline}</div>`;
+                }
                 html += `<div class="text-xs text-indigo-800 font-semibold bg-indigo-50/80 p-3 rounded-xl border border-indigo-100">핵심 채점 키워드: ${q.answerKeyWords.join(', ')}</div>`;
             }
 
