@@ -200,19 +200,13 @@
         <section id="screen-result" class="hidden w-full max-w-2xl bg-white rounded-2xl shadow-xl p-8 border border-slate-100 text-center">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-2xl mx-auto flex items-center justify-center text-2xl font-bold mb-4 shadow-inner">🎉</div>
             <h2 class="text-2xl font-bold text-slate-900 mb-1">수행평가 제출 완료</h2>
-            <p class="text-sm text-slate-500 mb-6">채점이 완료되었습니다. 결과 리포트를 확인하세요.</p>
-            <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 mb-6 grid grid-cols-2 gap-4 text-center">
-                <div class="p-4 bg-white rounded-xl shadow-sm border border-slate-100">
-                    <span class="block text-xs font-semibold text-slate-400 uppercase mb-1">총점</span>
-                    <span id="result-score" class="text-3xl font-extrabold text-indigo-600">0</span>
-                    <span class="text-sm text-slate-500"> / 100점</span>
-                </div>
-                <div class="p-4 bg-white rounded-xl shadow-sm border border-slate-100">
-                    <span class="block text-xs font-semibold text-slate-400 uppercase mb-1">판정</span>
-                    <span id="result-pass" class="text-2xl font-bold text-emerald-600">통과</span>
-                </div>
+            <p class="text-sm text-slate-500 mb-6">고생하셨습니다! 제출이 성공적으로 완료되었습니다.</p>
+            
+            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 mb-6 text-left space-y-4">
+                <h3 class="font-bold text-sm text-slate-700">내가 제출한 답안 확인</h3>
+                <div id="result-breakdown" class="space-y-3 max-h-72 overflow-y-auto pr-2"></div>
             </div>
-            <div id="result-breakdown" class="text-left space-y-3 mb-6 max-h-60 overflow-y-auto pr-2"></div>
+
             <button type="button" onclick="location.reload()" class="w-full py-3.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl shadow transition text-sm">
                 처음으로 돌아가기
             </button>
@@ -574,7 +568,7 @@
             {
                 id: 1,
                 type: 'drag-blank',
-                badge: '문항 1 (배점: 20점)',
+                badge: '문항 1',
                 text: '다음 대화의 빈칸에 들어갈 가장 적절한 내용을 고르시오.',
                 conversation: `
                     A: 어제 학교 오픈 채팅방 봤어? 옆 반 C 웃긴 사진 올라왔잖아.<br>
@@ -593,13 +587,13 @@
             {
                 id: 2,
                 type: 'drag-blank',
-                badge: '문항 2 (배점: 20점)',
+                badge: '문항 2',
                 text: '다음 대화에서 드러나는 가상공간의 도덕적 문제는?',
                 conversation: `
                     학생: 제가 조사한 우리 동네 사회적 문제를 주제로 한 과제 발표는 여기까지입니다. 들어주셔서 감사합니다.<br>
                     교수: 고생했습니다. 발표에 사용된 사진과 영상의 출처는 어디 있나요?<br>
                     학생: 아, 그건 제가 준비를 못 했습니다. 그냥 써도 된다고 생각해서…<br>
-                    교수: 우리가 다른 사람의 창작물을 허락 없이 사용해도 된다고 생각하기 쉽지만, 이는 <span class="drop-zone" id="blank-2-A" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropItem(event, 2, 'A')" onclick="clearBlank(2, 'A')">( 지식 재산권 침해 )</span>(이)라는 문제가 됩니다.
+                    교수: 우리가 다른 사람의 창작물을 허락 없이 사용해도 된다고 생각하기 쉽지만, 이는 <span class="drop-zone" id="blank-2-A" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropItem(event, 2, 'A')" onclick="clearBlank(2, 'A')">( A )</span>(이)라는 문제가 됩니다.
                 `,
                 options: [
                     "지식 재산권 침해", "사이버 폭력", "초상권 침해", "정보 격차", 
@@ -610,7 +604,7 @@
             {
                 id: 3,
                 type: 'subjective',
-                badge: '문항 3 (배점: 20점)',
+                badge: '문항 3',
                 text: '다음 글에서 드러나는 가상공간의 도덕적 문제의 원인을 설명하세요.',
                 passage: `“나는 온라인 게임을 즐겨 한다. 그런데 채팅 창에 온갖 욕설과 비방이 넘쳐 나서 불쾌할 때가 있다. 오늘도 게임하다가 상대방에게 입에 담지 못한 욕설을 들었다. 게임에서 지고 있을 때는 같은 팀원끼리 서로를 비난하기도 한다.”`,
                 guideline: '※ 서술 조건: \'~입니다. 왜냐하면 ~이기 때문입니다.\' 형식에 맞춰 작성하시오.',
@@ -619,7 +613,7 @@
             {
                 id: 4,
                 type: 'subjective',
-                badge: '문항 4 (배점: 20점)',
+                badge: '문항 4',
                 text: '다음 그림은 학생 김지사의 휴대폰 화면이다. 김지사에게 할 수 있는 조언은 무엇인가?',
                 hasImage: true,
                 imagePath: './images/문항4.png',
@@ -629,7 +623,7 @@
             {
                 id: 5,
                 type: 'subjective',
-                badge: '문항 5 (배점: 20점)',
+                badge: '문항 5',
                 text: '인터넷 실명제 및 디지털 윤리 교육이 왜 필요한지 자신의 생각을 50자 이내로 서술하시오.',
                 answerKeyWords: ["책임", "윤리", "보호", "예방", "악플"]
             }
@@ -720,8 +714,8 @@
 
             if (q.hasImage) {
                 html += `
-                    <div class="my-3 w-full max-w-xl mx-auto rounded-xl border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center" style="aspect-ratio: 1408 / 768;">
-                        <img src="${q.imagePath}" alt="문항 4 이미지" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/1408x768/f1f5f9/64748b?text=문항4+이미지+준비중';">
+                    <div class="my-3 w-full max-w-lg mx-auto rounded-xl border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center" style="width: 1080px; max-width: 100%; aspect-ratio: 1 / 1;">
+                        <img src="${q.imagePath}" alt="문항 4 이미지" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/1080x1080/f1f5f9/64748b?text=문항4+이미지+1080x1080';">
                     </div>
                 `;
             }
@@ -910,28 +904,23 @@
             clearInterval(timerInterval);
             closeSubmitModal();
 
-            let score = 0;
             let breakdownHtml = '';
 
             questions.forEach((q, idx) => {
-                let isCorrect = false;
                 const ans = userAnswers[idx];
-
-                if (q.type === 'drag-blank') {
-                    if (q.id === 1 && ans && ans.A === q.answer.A && ans.B === q.answer.B) isCorrect = true;
-                    if (q.id === 2 && ans && ans.A === q.answer.A) isCorrect = true;
-                } else if (q.type === 'choice') {
-                    if (ans === q.answer) isCorrect = true;
-                } else if (q.type === 'subjective') {
-                    if (ans && ans.trim().length > 5) isCorrect = true;
+                let displayAns = "미작성";
+                if (ans !== undefined && ans !== '') {
+                    if (typeof ans === 'object') {
+                        displayAns = JSON.stringify(ans);
+                    } else {
+                        displayAns = String(ans);
+                    }
                 }
 
-                if (isCorrect) score += 20;
-
                 breakdownHtml += `
-                    <div class="p-3 bg-white rounded-xl border border-slate-200 flex justify-between items-center text-xs">
-                        <span class="font-bold text-slate-700">문항 ${idx + 1}</span>
-                        <span class="${isCorrect ? 'text-emerald-600 font-bold' : 'text-rose-500'}">${isCorrect ? '정답 (20점)' : '오답 (0점)'}</span>
+                    <div class="p-3 bg-white rounded-xl border border-slate-200 space-y-1 text-xs">
+                        <div class="font-bold text-slate-800">${q.badge}</div>
+                        <div class="text-slate-600 bg-slate-50 p-2 rounded border border-slate-100">내 답안: ${displayAns}</div>
                     </div>
                 `;
             });
@@ -951,8 +940,6 @@
                 })
             }).catch(err => console.warn("Google Sheet sync error:", err));
 
-            document.getElementById('result-score').innerText = score;
-            document.getElementById('result-pass').innerText = score >= 60 ? '통과 (합격)' : '미흡';
             document.getElementById('result-breakdown').innerHTML = breakdownHtml;
 
             screenExam.classList.add('hidden');
@@ -981,8 +968,8 @@
 
             if (q.hasImage) {
                 html += `
-                    <div class="my-2 w-full max-w-sm rounded-lg border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center" style="aspect-ratio: 1408 / 768;">
-                        <img src="${q.imagePath}" alt="문항 이미지" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/1408x768/f1f5f9/64748b?text=이미지';">
+                    <div class="my-2 w-full max-w-xs rounded-lg border border-slate-200 overflow-hidden bg-slate-100 flex items-center justify-center" style="aspect-ratio: 1 / 1;">
+                        <img src="${q.imagePath}" alt="문항 이미지" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/1080x1080/f1f5f9/64748b?text=이미지';">
                     </div>
                 `;
             }
